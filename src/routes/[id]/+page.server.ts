@@ -1,10 +1,10 @@
 import type { Actions, PageServerLoad } from './$types';
-import { prisma } from '$lib/server/prisma';
-import { error, fail } from '@sveltejs/kit';
+import prisma from '$lib/prisma';
+import { error, fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const getRecord = async () => {
-		const record = await prisma.test.findUnique({
+		const record = await prisma.record.findUnique({
 			where: {
 				id: Number(params.id),
 			},
@@ -22,19 +22,19 @@ export const load: PageServerLoad = async ({ params }) => {
 
 export const actions: Actions = {
 	updateRecord: async ({ request, params }) => {
-		const { title, text } = Object.fromEntries(await request.formData()) as {
+		const { title, content } = Object.fromEntries(await request.formData()) as {
 			title: string;
-			text: string;
+			content: string;
 		};
 
 		try {
-			await prisma.test.update({
+			await prisma.record.update({
 				where: {
 					id: Number(params.id),
 				},
 				data: {
 					title,
-					text,
+					content,
 				},
 			});
 		} catch (err) {
@@ -42,8 +42,6 @@ export const actions: Actions = {
 			return fail(500, { message: 'не вышло' });
 		}
 
-		return {
-			status: 200,
-		};
+		throw redirect(303, '/');
 	},
 };

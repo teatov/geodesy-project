@@ -1,22 +1,22 @@
 import type { PageServerLoad, Actions } from './$types';
-import { prisma } from '$lib/server/prisma';
+import prisma from '$lib/prisma';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	return {
-		records: await prisma.test.findMany(),
+		records: await prisma.record.findMany(),
 	};
 };
 
 export const actions: Actions = {
 	createRecord: async ({ request }) => {
-		const { title, text } = Object.fromEntries(await request.formData()) as {
+		const { title, content } = Object.fromEntries(await request.formData()) as {
 			title: string;
-			text: string;
+			content: string;
 		};
 
 		try {
-			await prisma.test.create({ data: { title, text } });
+			await prisma.record.create({ data: { title, content } });
 		} catch (error) {
 			console.error(error);
 			return fail(500, { message: 'не удалось создать' });
@@ -33,7 +33,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			await prisma.test.delete({ where: { id: Number(id) } });
+			await prisma.record.delete({ where: { id: Number(id) } });
 		} catch (error) {
 			console.error(error);
 			return fail(500, { message: 'не удалось создать' });

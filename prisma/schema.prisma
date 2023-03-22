@@ -7,11 +7,11 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model Record {
-  id Int @id @default(autoincrement())
-  title String
-  text String
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
 }
