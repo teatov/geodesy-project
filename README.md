@@ -7,9 +7,8 @@
 Откройте консоль в нужной папке и выполните команду:
 
 ```bash
-git clone https://<ваш токен аутентификации>github.com/Teatov/geodesy-project.git
+git clone https://github.com/Teatov/geodesy-project.git
 ```
-[Подробнее о токене аутентификации](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Он обязателен только если вы собираетесь выполнять push на репозиторий.
 
 ## Установка зависимостей
 
