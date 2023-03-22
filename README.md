@@ -7,8 +7,9 @@
 Откройте консоль в нужной папке и выполните команду:
 
 ```bash
-git@github.com:Teatov/geodesy-project.git
+git clone https://<ваш токен аутентификации>github.com/Teatov/geodesy-project.git
 ```
+[Подробнее о токене аутентификации](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Он обязателен только если вы собираетесь выполнять push на репозиторий.
 
 ## Установка зависимостей
 
@@ -36,9 +37,9 @@ npm run dev -- --open
 npm run build
 ```
 
-Можно предпросматривать эту сборку с помощью `npm run preview`.
+Результат появится в папке build.
 
-> Чтобы развернуть проект на сервере, надо установить [адаптер](https://kit.svelte.dev/docs/adapters) для окружения которое будет использоваться на сервере.
+Можно предпросматривать эту сборку с помощью `npm run preview`.
 
 # Разработка
 
