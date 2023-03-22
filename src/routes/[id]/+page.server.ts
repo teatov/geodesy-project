@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	const getRecord = async () => {
 		const record = await prisma.record.findUnique({
 			where: {
-				id: Number(params.id),
+				id: params.id,
 			},
 		});
 		if (!record) {
