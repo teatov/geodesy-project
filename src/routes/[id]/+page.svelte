@@ -14,5 +14,5 @@
 	<label for="title"> Текст </label>
 	<textarea id="content" name="content" rows={5} required value={record.content} />
 	<br />
-	<button type="submit">Создать</button>
+	<button type="submit">Обновить</button>
 </form>

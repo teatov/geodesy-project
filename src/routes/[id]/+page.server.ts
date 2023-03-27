@@ -30,7 +30,7 @@ export const actions: Actions = {
 		try {
 			await prisma.record.update({
 				where: {
-					id: Number(params.id),
+					id: params.id,
 				},
 				data: {
 					title,
