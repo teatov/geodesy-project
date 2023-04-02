@@ -6,12 +6,68 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mysql"
+  url      = "mysql://root:root@localhost:3306/geodesy"
 }
 
 model Record {
-  id      String    @id @default(uuid())
+  id      String @id @default(uuid())
   title   String
   content String
+}
+
+model Survey {
+  id                         String                 @id @default(uuid())
+  createdAt                  DateTime               @default(now())
+  updatedAt                  DateTime               @updatedAt
+  federalSubject             String
+  workBy                     String
+  markerIndex                String
+  markerName                 String
+  placingYear                Int
+  signType                   String
+  signHeight                 Int
+  centerType                 String
+  altitude                   Int
+  trapezes                   String
+  signIsPlaced               MarkerPresenceState
+  monolith1IsIntact          MarkerIntegrityState
+  monolith2IsOpened          MarkerOpennessState
+  monoliths3And4AreOpened    MarkerOpennessState
+  outerSignIsIntact          MarkerIntegrityState
+  orp1IsIntact               MarkerIntegrityState
+  orp2IsIntact               MarkerIntegrityState
+  trenchIsReadable           MarkerReadabilityState
+  centerMarkPhoto            String
+  exteriorPhoto              String
+  upperMarkBelowGroundHeight String
+  satelliteObservability     String
+  createdBy                  String
+  approvedBy                 String
+}
+
+enum MarkerPresenceState {
+  MISSING
+  PRESENT
+}
+
+enum MarkerIntegrityState {
+  INTACT
+  NOT_INTACT
+}
+
+enum MarkerOpennessState {
+  OPENED
+  NOT_CLOSED
+}
+
+enum MarkerReadabilityState {
+  READABLE
+  UNREADABLE
+}
+
+enum MarkerObservabilityState {
+  OBSERVABLE
+  CONDITIONALLY_OBSERVABLE
+  UNOBSERVABLE
 }

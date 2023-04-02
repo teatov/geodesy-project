@@ -18,6 +18,14 @@ git clone https://github.com/Teatov/geodesy-project.git
 npm install
 ```
 
+## Настройка базы данных
+
+Установите MySQL. Задайте пароль `root`.
+
+Откройте консоль и запустите `mysql -uroot -proot`.
+
+Введите `CREATE DATABASE geodesy;` и выйдите, введя `exit`.
+
 ## Тестовый запуск
 
 Чтобы запустить сервер в режиме разработчика, выполните команду:
