@@ -33,7 +33,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			await prisma.record.delete({ where: { id: Number(id) } });
+			await prisma.record.delete({ where: { id: id } });
 		} catch (error) {
 			console.error(error);
 			return fail(500, { message: 'не удалось создать' });
