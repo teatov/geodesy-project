@@ -4,8 +4,12 @@
 
 	export let data: PageData;
 
-	const { form, errors, constraints, enhance } = superForm(data.form);
+	const { form, errors, enhance, capture, restore } = superForm(data.form, {
+		resetForm: false,
+	});
 	$: ({ records } = data);
+
+	export const snapshot = { capture, restore };
 </script>
 
 {#if data.user}

@@ -5,13 +5,14 @@ import { z } from 'zod';
 import { superValidate } from 'sveltekit-superforms/server';
 
 const recordSchema = z.object({
-	title: z.string().min(1).max(4).trim(),
-	content: z.string().min(1).max(300).trim(),
+	title: z.string().min(1).max(100).trim(),
+	content: z.string().min(1).max(500).trim(),
 });
 
 export const load: PageServerLoad = async () => {
-	const form = await superValidate(recordSchema);
 	const records = await prisma.record.findMany();
+
+	const form = await superValidate(recordSchema);
 
 	return { form, records };
 };

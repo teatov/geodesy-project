@@ -1,6 +1,13 @@
 import type { Actions, PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
 import { error, fail, redirect } from '@sveltejs/kit';
+import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms/server';
+
+const recordSchema = z.object({
+	title: z.string().min(1).max(100).trim(),
+	content: z.string().min(1).max(500).trim(),
+});
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const { user, session } = await locals.auth.validateUser();
@@ -14,33 +21,25 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		},
 	});
 
+	const form = await superValidate(record, recordSchema);
+
 	if (record.authUserId !== user.userId) {
 		throw error(403, 'Вы не можете редактировать чужие записи');
 	}
 
-	const getRecord = async () => {
-		const record = await prisma.record.findUnique({
-			where: {
-				id: params.id,
-			},
-		});
-		if (!record) {
-			throw error(404, 'не найдено');
-		}
-		return record;
-	};
-
-	return {
-		record: getRecord(),
-	};
+	return { form, record };
 };
 
 export const actions: Actions = {
 	updateRecord: async ({ request, params }) => {
-		const { title, content } = Object.fromEntries(await request.formData()) as {
-			title: string;
-			content: string;
-		};
+		const form = await superValidate(request, recordSchema);
+		console.log(form);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const { title, content } = form.data;
 
 		try {
 			await prisma.record.update({
