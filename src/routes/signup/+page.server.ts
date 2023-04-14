@@ -1,15 +1,9 @@
 import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { z } from 'zod';
 import { superValidate, setError } from 'sveltekit-superforms/server';
 import { Prisma } from '@prisma/client';
-
-const signupSchema = z.object({
-	fullName: z.string().min(1).max(100).trim(),
-	email: z.string().email().min(1).max(500).trim(),
-	password: z.string().min(1).max(100).trim(),
-});
+import { signupSchema } from '$lib/zod/schema';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();

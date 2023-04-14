@@ -1,14 +1,9 @@
 import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { z } from 'zod';
 import { superValidate, setError } from 'sveltekit-superforms/server';
 import { LuciaError } from 'lucia-auth';
-
-const loginSchema = z.object({
-	email: z.string().email().min(1).max(500).trim(),
-	password: z.string().min(1).max(100).trim(),
-});
+import { loginSchema } from '$lib/zod/schema';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();

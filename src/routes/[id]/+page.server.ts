@@ -1,13 +1,8 @@
 import type { Actions, PageServerLoad } from './$types';
-import prisma from '$lib/prisma';
+import prisma from '$lib/server/prisma';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { z } from 'zod';
-import { superValidate,setError } from 'sveltekit-superforms/server';
-
-const recordSchema = z.object({
-	title: z.string().min(1).max(100).trim(),
-	content: z.string().min(1).max(500).trim(),
-});
+import { superValidate, setError } from 'sveltekit-superforms/server';
+import { recordSchema } from '$lib/zod/schema';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const { user, session } = await locals.auth.validateUser();
@@ -58,7 +53,7 @@ export const actions: Actions = {
 			});
 		} catch (err) {
 			console.error(err);
-			
+
 			const message = 'При обновлении записи возникла ошибка';
 
 			return setError(form, null, message);
