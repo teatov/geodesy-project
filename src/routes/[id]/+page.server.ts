@@ -31,7 +31,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	updateRecord: async ({ request, params }) => {
+	updateRecord: async ({ request, params, locals }) => {
+		const { user, session } = await locals.auth.validateUser();
+		if (!(user && session)) {
+			throw redirect(302, '/');
+		}
+
 		const form = await superValidate(request, recordSchema);
 		console.log(form);
 
@@ -54,6 +59,19 @@ export const actions: Actions = {
 		} catch (err) {
 			console.error(err);
 			return fail(500, { message: 'не вышло' });
+		}
+
+		throw redirect(303, '/');
+	},
+
+	deleteRecord: async ({ params }) => {
+		const id = params.id;
+
+		try {
+			await prisma.record.delete({ where: { id: id } });
+		} catch (error) {
+			console.error(error);
+			return fail(500, { message: 'не удалось удалить' });
 		}
 
 		throw redirect(303, '/');

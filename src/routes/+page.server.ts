@@ -48,36 +48,4 @@ export const actions: Actions = {
 
 		return { status: 201 };
 	},
-
-	deleteRecord: async ({ url, locals }) => {
-		const id = url.searchParams.get('id');
-
-		if (!id) {
-			return fail(400, { message: 'плохой реквест' });
-		}
-
-		const { user, session } = await locals.auth.validateUser();
-		if (!(user && session)) {
-			throw redirect(302, '/');
-		}
-
-		const record = await prisma.record.findUniqueOrThrow({
-			where: {
-				id: id,
-			},
-		});
-
-		if (record.authUserId !== user.userId) {
-			throw error(403, 'Вы не можете удалять чужие записи');
-		}
-
-		try {
-			await prisma.record.delete({ where: { id: id } });
-		} catch (error) {
-			console.error(error);
-			return fail(500, { message: 'не удалось создать' });
-		}
-
-		return { status: 200 };
-	},
 };

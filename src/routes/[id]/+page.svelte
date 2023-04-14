@@ -26,3 +26,8 @@
 	<br />
 	<button type="submit">Обновить</button>
 </form>
+<br>
+
+<form action="?/deleteRecord" method="POST">
+	<button type="submit">Удалить</button>
+</form>
