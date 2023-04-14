@@ -31,8 +31,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@lucia-auth/adapter-prisma": "^1.0.0",
+		"@lucia-auth/sveltekit": "^0.6.11",
 		"@prisma/client": "^4.11.0",
 		"dotenv": "^16.0.3",
+		"lucia-auth": "^1.0.0",
 		"ts-node": "^10.9.1"
 	}
 }

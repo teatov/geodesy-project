@@ -24,10 +24,12 @@
 		<p>
 			{record.content}
 		</p>
-		<form action="?/deleteRecord&id={record.id}" method="POST">
-			<button type="submit">Удалить</button>
-		</form>
-		<a href="/{record.id}" role="button">Редактировать</a>
+		{#if record.authUserId === data.user?.userId}
+			<form action="?/deleteRecord&id={record.id}" method="POST">
+				<button type="submit">Удалить</button>
+			</form>
+			<a href="/{record.id}" role="button">Редактировать</a>
+		{/if}
 		<hr />
 	</article>
 {/each}

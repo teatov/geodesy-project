@@ -2,7 +2,22 @@ import type { Actions, PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
 import { error, fail, redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
+	const { user, session } = await locals.auth.validateUser();
+	if (!(user && session)) {
+		throw redirect(302, '/');
+	}
+
+	const record = await prisma.record.findUniqueOrThrow({
+		where: {
+			id: params.id,
+		},
+	});
+
+	if (record.authUserId !== user.userId) {
+		throw error(403, 'Вы не можете редактировать чужие записи');
+	}
+
 	const getRecord = async () => {
 		const record = await prisma.record.findUnique({
 			where: {
