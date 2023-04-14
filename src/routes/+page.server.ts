@@ -2,7 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import prisma from '$lib/prisma';
 import { fail, redirect, error } from '@sveltejs/kit';
 import { z } from 'zod';
-import { superValidate } from 'sveltekit-superforms/server';
+import { superValidate, setError } from 'sveltekit-superforms/server';
 
 const recordSchema = z.object({
 	title: z.string().min(1).max(100).trim(),
@@ -43,7 +43,10 @@ export const actions: Actions = {
 			});
 		} catch (error) {
 			console.error(error);
-			return fail(500, { message: 'не удалось создать' });
+			
+			const message = 'При создании записи возникла ошибка';
+
+			return setError(form, null, message);
 		}
 
 		return { status: 201 };

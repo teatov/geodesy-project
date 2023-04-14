@@ -31,6 +31,10 @@
 				<small class="text-error-500">{$errors.content}</small>
 			{/if}
 		</label>
+		{#if $errors._errors}
+			<br />
+			<small class="text-error-500">{$errors._errors}</small>
+		{/if}
 		<br />
 		<button class="btn variant-filled-primary" type="submit">Создать</button>
 		<hr />

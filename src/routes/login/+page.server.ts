@@ -2,7 +2,8 @@ import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { z } from 'zod';
-import { superValidate } from 'sveltekit-superforms/server';
+import { superValidate, setError } from 'sveltekit-superforms/server';
+import { LuciaError } from 'lucia-auth';
 
 const loginSchema = z.object({
 	email: z.string().email().min(1).max(500).trim(),
@@ -37,7 +38,16 @@ export const actions: Actions = {
 			locals.auth.setSession(session);
 		} catch (err) {
 			console.error(err);
-			return fail(400, { message: 'При входе возникла ошибка' });
+
+			let message = 'При входе возникла ошибка';
+
+			if (err instanceof LuciaError) {
+				if (err.message === 'AUTH_INVALID_KEY_ID' || err.message === 'AUTH_INVALID_PASSWORD') {
+					message = 'Неверная почта или пароль';
+				}
+			}
+
+			return setError(form, null, message);
 		}
 		throw redirect(302, '/');
 	},
