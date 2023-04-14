@@ -1,11 +1,19 @@
 import type { PageServerLoad, Actions } from './$types';
 import prisma from '$lib/prisma';
 import { fail, redirect, error } from '@sveltejs/kit';
+import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms/server';
+
+const recordSchema = z.object({
+	title: z.string().min(1).max(4).trim(),
+	content: z.string().min(1).max(300).trim(),
+});
 
 export const load: PageServerLoad = async () => {
-	return {
-		records: await prisma.record.findMany(),
-	};
+	const form = await superValidate(recordSchema);
+	const records = await prisma.record.findMany();
+
+	return { form, records };
 };
 
 export const actions: Actions = {
@@ -15,10 +23,14 @@ export const actions: Actions = {
 			throw redirect(302, '/');
 		}
 
-		const { title, content } = Object.fromEntries(await request.formData()) as {
-			title: string;
-			content: string;
-		};
+		const form = await superValidate(request, recordSchema);
+		console.log(form);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const { title, content } = form.data;
 
 		try {
 			await prisma.record.create({
