@@ -13,28 +13,33 @@
 </script>
 
 {#if data.user}
-	<form action="?/createRecord" method="POST" use:enhance>
+	<form class="w-80" action="?/createRecord" method="POST" use:enhance>
 		<h3>Создать</h3>
-		<label for="title"> Заголовок </label>
-		<input type="text" id="title" name="title" bind:value={$form.title} />
-		{#if $errors.title}
-			<small>{$errors.title}</small>
-		{/if}
+		<label for="title">
+			<span>Заголовок</span>
+			<input class="input" type="text" id="title" name="title" bind:value={$form.title} />
+			{#if $errors.title}
+				<small class="text-error-500">{$errors.title}</small>
+			{/if}
+		</label>
+
 		<br />
-		<label for="title"> Текст </label>
-		<textarea id="content" name="content" rows={5} bind:value={$form.content} />
-		{#if $errors.content}
-			<small>{$errors.content}</small>
-		{/if}
+		<label for="title">
+			<span>Текст</span>
+			<textarea class="textarea" id="content" name="content" rows={5} bind:value={$form.content} />
+			{#if $errors.content}
+				<small class="text-error-500">{$errors.content}</small>
+			{/if}
+		</label>
 		<br />
-		<button type="submit">Создать</button>
+		<button class="btn variant-filled-primary" type="submit">Создать</button>
 		<hr />
 	</form>
 {/if}
 
 {#each records as record}
 	<article>
-		<header>{record.title}</header>
+		<strong>{record.title}</strong>
 		<p>
 			{record.content}
 		</p>

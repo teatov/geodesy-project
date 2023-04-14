@@ -10,23 +10,29 @@
 
 <a href="/" role="button">Назад</a>
 
-<form action="?/updateRecord" method="POST" use:enhance>
+<form class="w-80" action="?/updateRecord" method="POST" use:enhance>
 	<h3>Редактировать {record.title}</h3>
-	<label for="title"> Заголовок </label>
-	<input type="text" id="title" name="title" bind:value={$form.title} />
-	{#if $errors.title}
-		<small>{$errors.title}</small>
-	{/if}
+	<label for="title">
+		<span>Заголовок</span>
+		<input class="input" type="text" id="title" name="title" bind:value={$form.title} />
+		{#if $errors.title}
+			<small class="text-error-500">{$errors.title}</small>
+		{/if}
+	</label>
+
 	<br />
-	<label for="title"> Текст </label>
-	<textarea id="content" name="content" rows={5} bind:value={$form.content} />
-	{#if $errors.content}
-		<small>{$errors.content}</small>
-	{/if}
+	<label for="title">
+		<span>Текст</span>
+		<textarea class="textarea" id="content" name="content" rows={5} bind:value={$form.content} />
+		{#if $errors.content}
+			<small class="text-error-500">{$errors.content}</small>
+		{/if}
+	</label>
+
 	<br />
-	<button type="submit">Обновить</button>
+	<button class="btn variant-filled-primary" type="submit">Обновить</button>
 </form>
-<br>
+<br />
 
 <form action="?/deleteRecord" method="POST">
 	<button type="submit">Удалить</button>

@@ -4,12 +4,20 @@
 	export let data: PageData;
 </script>
 
-<h1>Личный кабинет</h1>
+<h2>Личный кабинет</h2>
 <div>
-	<p>Почта: {data.user.email}</p>
-	<p>ФИО: {data.user.fullName}</p>
-
+	<ul class="list">
+		<li>
+			<p>Почта: {data.user.email}</p>
+		</li>
+		<li>
+			<p>ФИО: {data.user.fullName}</p>
+		</li>
+	</ul>
+	<br />
 	<form method="POST">
-		<button formaction="/logout" type="submit">Выйти из учётной записи</button>
+		<button class="btn variant-filled-error" formaction="/logout" type="submit"
+			>Выйти из учётной записи</button
+		>
 	</form>
 </div>
