@@ -1,4 +1,6 @@
 <script lang="ts">
+	import TextArea from '$lib/components/TextArea.svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms/client';
 
@@ -15,26 +17,16 @@
 {#if data.user}
 	<form class="w-80" action="?/createRecord" method="POST" use:enhance>
 		<h3>Создать</h3>
-		<label for="title">
-			<span>Заголовок</span>
-			<input class="input" type="text" id="title" name="title" bind:value={$form.title} />
-			{#if $errors.title}
-				<small class="text-error-500">{$errors.title}</small>
-			{/if}
-		</label>
+		<TextInput type="text" name="title" label="Заголовок" value={$form.title} errors={$errors.title} />
 
 		<br />
-		<label for="title">
-			<span>Текст</span>
-			<textarea class="textarea" id="content" name="content" rows={5} bind:value={$form.content} />
-			{#if $errors.content}
-				<small class="text-error-500">{$errors.content}</small>
-			{/if}
-		</label>
+		<TextArea type="text" name="content" label="Текст" value={$form.content} errors={$errors.content} />
+
 		{#if $errors._errors}
 			<br />
 			<small class="text-error-500">{$errors._errors}</small>
 		{/if}
+
 		<br />
 		<button class="btn variant-filled-primary" type="submit">Создать</button>
 		<hr />
