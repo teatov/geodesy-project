@@ -26,12 +26,14 @@ npm install
 
 Введите `CREATE DATABASE geodesy;` и выйдите, введя `exit`.
 
+В консоли выполните команду `npx prisma migrate dev`.
+
 ## Тестовый запуск
 
 Чтобы запустить сервер в режиме разработчика, выполните команду:
 
 ```bash
-npm run dev -- --open
+npm run dev
 ```
 
 Чтобы остановить его, в консоли нажмите `Ctrl+C`.
