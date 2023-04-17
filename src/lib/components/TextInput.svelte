@@ -2,7 +2,7 @@
 	import type { InputConstraint } from 'sveltekit-superforms';
 
 	export let name: string;
-	export let value: string;
+	export let value: string | undefined = undefined;
 	export let label: string | undefined = undefined;
 	export let errors: string[] | undefined = undefined;
 </script>
