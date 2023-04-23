@@ -89,3 +89,4 @@ JavaScript фронтенд-фреймворк для создания сайт�
 - ESLint
 - Prettier - Code formatter
 - Prisma
+- Tailwind CSS IntelliSense

@@ -53,57 +53,126 @@ model AuthKey {
 }
 
 model Survey {
-  id                         String                 @id @default(uuid())
-  createdAt                  DateTime               @default(now())
-  updatedAt                  DateTime               @updatedAt
-  federalSubject             String
-  workBy                     String
-  markerIndex                String
-  markerName                 String
-  placingYear                Int
-  signType                   String
-  signHeight                 Int
-  centerType                 String
-  altitude                   Int
-  trapezes                   String
-  signIsPlaced               MarkerPresenceState
-  monolith1IsIntact          MarkerIntegrityState
-  monolith2IsOpened          MarkerOpennessState
-  monoliths3And4AreOpened    MarkerOpennessState
-  outerSignIsIntact          MarkerIntegrityState
-  orp1IsIntact               MarkerIntegrityState
-  orp2IsIntact               MarkerIntegrityState
-  trenchIsReadable           MarkerReadabilityState
-  centerMarkPhoto            String
-  exteriorPhoto              String
-  upperMarkBelowGroundHeight String
-  satelliteObservability     String
-  createdBy                  String
-  approvedBy                 String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  surveyDate DateTime
+
+  federalSubject     FederalSubject @relation(fields: [federalSubjectCode], references: [code])
+  federalSubjectCode Int
+
+  workBy String
+
+  latitude  Float
+  longitude Float
+
+  markerIndex String?
+  markerName  String
+  placingYear Int?
+  signType    String
+  signHeight  Float
+  centerType  String?
+  altitude    Int?
+  trapezes    String?
+
+  signPresence PresenceState
+
+  monolith1Integrity IntegrityState
+  outerSignIntegrity IntegrityState
+  orp1Integrity      IntegrityState
+  orp2Integrity      IntegrityState
+
+  monolith2Openness      OpennessState
+  monoliths3And4Openness OpennessState
+
+  trenchReadability ReadabilityState
+
+  centerMarkPhoto   Photo   @relation("CenterMarkPhoto", fields: [centerMarkPhotoId], references: [id])
+  centerMarkPhotoId String
+  exteriorPhoto     Photo   @relation("ExteriorPhoto", fields: [exteriorPhotoId], references: [id])
+  exteriorPhotoId   String
+  extraPhotos       Photo[] @relation("ExtraPhotos")
+
+  upperMarkBelowGroundHeight Float
+
+  satelliteObservability      ObservabilityState
+  satelliteObservabilityNotes String?
+
+  extraNotes String?
+
+  createdBy  String
+  approvedBy String?
 }
 
-enum MarkerPresenceState {
+enum SignType {
+  NA
+  SIGNAL_SIMPLE
+  SIGNAL_COMPLEX
+  PYRAMID_WOOD_THREE_SIDED
+  PYRAMID_WOOD_FOUR_SIDED
+  PYRAMID_METAL_THREE_SIDED
+  PYRAMID_METAL_FOUR_SIDED
+  STAND_WOOD_THREE_SIDED
+  STAND_WOOD_FOUR_SIDED
+  STAND_METAL_THREE_SIDED
+  STAND_METAL_FOUR_SIDED
+  POST_CONCRETE
+  POST_ROCK
+  POST_BRICH
+}
+
+enum PresenceState {
+  NA
   MISSING
   PRESENT
 }
 
-enum MarkerIntegrityState {
+enum IntegrityState {
+  NA
   INTACT
   NOT_INTACT
 }
 
-enum MarkerOpennessState {
+enum OpennessState {
+  NA
   OPENED
   NOT_CLOSED
 }
 
-enum MarkerReadabilityState {
+enum ReadabilityState {
+  NA
   READABLE
   UNREADABLE
 }
 
-enum MarkerObservabilityState {
+enum ObservabilityState {
+  NA
   OBSERVABLE
   CONDITIONALLY_OBSERVABLE
   UNOBSERVABLE
+}
+
+model Photo {
+  id               String   @id @default(uuid())
+  fileName         String
+  centerMarkSurver Survey[] @relation("CenterMarkPhoto")
+  exteriorSurvey   Survey[] @relation("ExteriorPhoto")
+  extraSurvey      Survey?  @relation("ExtraPhotos", fields: [extraSurveyId], references: [id])
+  extraSurveyId    String?
+  distance         Float?
+}
+
+model FederalDistrict {
+  id              Int              @id
+  name            String
+  federalSubjects FederalSubject[]
+}
+
+model FederalSubject {
+  code              Int             @id
+  name              String
+  federalDistrict   FederalDistrict @relation(fields: [federalDistrictId], references: [id])
+  federalDistrictId Int
+  surveys           Survey[]
 }

@@ -11,6 +11,9 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
+	"prisma": {
+		"seed": "node --experimental-specifier-resolution=node --loader ts-node/esm seed.ts"
+	},
 	"devDependencies": {
 		"@skeletonlabs/skeleton": "^1.2.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
@@ -40,7 +43,9 @@
 	"dependencies": {
 		"@lucia-auth/adapter-prisma": "^1.0.0",
 		"@prisma/client": "^4.11.0",
+		"csv-parse": "^5.3.8",
 		"dotenv": "^16.0.3",
+		"geo-coordinates-parser": "^1.6.3",
 		"lucia-auth": "^1.0.0",
 		"ts-node": "^10.9.1"
 	}
