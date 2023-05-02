@@ -6,6 +6,7 @@
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { FileButton } from '@skeletonlabs/skeleton';
+	import img from '$lib/components/img.svelte';
 
 	export let data: PageData;
 
@@ -25,29 +26,57 @@
 	let stolb = 0,stolb_vost = 0, monolit1 = 0, monolit2 = 0, monolit3 = 0, outznak = 0, orp1 = 0, orp2 = 0, okopka = 0;
 	let monolit1_vost = 0, monolit2_vost = 0, monolit3_vost =0, outznak_vost = 0, orp1_vost = 0;
 	let orp2_vost = 0, okopka_vost = 0;
+	let file, trapecy = 0;
+	let src = "/static/Fig.jpg";
 </script>
 
 {#if data.user}
-<div class="flex justify-center space-x-4">
-	<form class="w-1000" action="?/createRecord" method="POST" use:enhance>
-		<h3>Карточка обследования пункта ГГС</h3>
-		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} />
+<div class="grid justify-items-center w-3/4 text-sm font-serif">
+	<form action="?/createRecord" method="POST" use:enhance>
+		<h3 class="my-5 text-center">Карточка обследования пункта ГГС</h3>
+		<div class="m-3">
+		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} /></div>
+		<div class="m-3">
+
 		<TextInput type="int" name="number" label="Номер телефона" value={$form.title} errors={$errors.title} />
+		</div>
+		<div class="m-3">
 		<TextInput type="text" name="email" label="Электронная почта" value={$form.title} errors={$errors.title} />
+		</div>
+		<div class="m-3">
 		<TextInput type="date" name="createdAt" label="Год производства работ" value={$form.title} errors={$errors.title} />
-				
-		<TextInput type="text" name="federalSubject" label="Субъект Российской Федерации" value={$form.title} errors={$errors.title} />
+		</div>
+		<div class="m-3">
+		<TextInput type="text" name="federalSubject" label="Субъект Российской Федерации" value={$form.title} errors={$errors.title} /></div>
+		<div class="m-3">
 		<p>Кем выполнена работа</p>
 		<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
 			<RadioItem bind:group={timeHorizontal} name="special" value="Volonter">Волонтер</RadioItem>
 			<RadioItem bind:group={timeHorizontal} name="special" value="Special">Специалист</RadioItem>
 		</RadioGroup>
-		<TextInput type="text" name="markerName" label="Название геодезического пункта (если известно)" value={$form.title} errors={$errors.title} />	
+	</div>
+	{#if timeHorizontal=="Special"}
+	<div class="m-3">
+	<TextInput type="text" name="type center" label="Тип центра" value={$form.title} errors={$errors.title} />
+</div>
+<div class="m-3">
+	<p>Трапеции</p>
+	<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+		<RadioItem bind:group={trapecy} name="special" value="1">1:50 000</RadioItem>
+		<RadioItem bind:group={trapecy} name="special" value="2">1:200 000</RadioItem>
+	</RadioGroup></div>
+	{/if}
+	<div class="m-3">
+		<TextInput type="text" name="markerName" label="Название геодезического пункта (если известно)" value={$form.title} errors={$errors.title} />
+	</div>	
+	<div class="m-3">
 		<TextInput type="text" name="markerIndex" label="Номер геодезического пункта (если известно)" value={$form.title} errors={$errors.title} />	
+		</div>
+		<div class="m-3">
 		<Accordion autocollapse class="card p-4 text-token">
 			<AccordionItem autocollapse>
 				<svelte:fragment slot="lead"><i class="fa-solid fa-film text-xl w-6 text-center" /></svelte:fragment>
-						<svelte:fragment slot="summary"><p class="font-bold">Тип знака (наружное оформление):</p></svelte:fragment>
+						<svelte:fragment slot="summary"><p>Тип знака (наружное оформление):</p></svelte:fragment>
 						<svelte:fragment slot="content">
 							<p><strong>Сигнал </strong> (состоит из двух вложенных друг в друга конструкций — внешней и внутренней усеченных пирамид, или ферм, одна из которых несёт площадку для наблюдателя и визирную цель, а другая — столик для прибора.) </p>
 							<p><strong>Пирамида</strong> (обычно высота 5-8 м, может быть определена путем измерения с точностью до 0.1 м и проставлена в ячейку)</p>
@@ -55,12 +84,15 @@
 							<p><strong>Тур</strong> (аналог штатива, устанавливается на столбе)</p>
 						</svelte:fragment>
 			</AccordionItem>
+			<div class="m-3">
 			<RadioGroup class = "forma" active="variant-filled-primary" hover="hover:variant-soft-primary">
 			<RadioItem bind:group={forma} name="form" value={1}>Сигнал</RadioItem>
 			<RadioItem bind:group={forma} name="form" value={2}>Пирамида</RadioItem>
 			<RadioItem bind:group={forma} name="form" value={3}>Штатив</RadioItem>
 			<RadioItem bind:group={forma} name="form" value={4}>Тур</RadioItem>
 		</RadioGroup>
+	</div>
+	<div class="m-3">
 		{#if forma === 1}
 			<RadioGroup class = "form_signal" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={signal} name="form" value="1"><p><italic>Простой сигнал</italic> (высота от 6м. до 15м.)</p> </RadioItem>
@@ -78,7 +110,7 @@
 		{:else if forma == 3}
 			<RadioGroup class = "form_shtativ" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={material} name="form" value="1">Деревянный</RadioItem>
-				<RadioItem bind:group={material} name="form" value="2">Металлическый</RadioItem>
+				<RadioItem bind:group={material} name="form" value="2">Металлическй</RadioItem>
 			</RadioGroup>
 			<RadioGroup class = "form_shtativ" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={form_sht} name="form" value="1">Трехгранный</RadioItem>
@@ -91,13 +123,20 @@
 				<RadioItem bind:group={material} name="form" value="3">Кирпичный</RadioItem>
 			</RadioGroup>
 		{/if}
+	</div>
 		</Accordion>
+	</div>
+	<div class="m-3">
 		<TextInput type="text" name="height" label="Высота над уровнем моря (может быть снята с карты или с показаний GPS приёмника) " value={$form.title} errors={$errors.title} />
+		</div>
+		<div class="m-3">
 		<TextInput type="text" name="coordinate" label="Координаты по GPS приёмнику (43.115468, 131.885431 и высота над эллипсоидом WGS-84))" value={$form.title} errors={$errors.title} />
+	</div>
+	<div class="m-3">
 		<Accordion autocollapse class="card p-4 text-token">
 			<AccordionItem autocollapse>
 				<svelte:fragment slot="lead"><i class="fa-solid fa-film text-xl w-6 text-center" /></svelte:fragment>
-						<svelte:fragment slot="summary"><p class="font-bold">Результаты обследования пункта:</svelte:fragment>
+						<svelte:fragment slot="summary"><p>Результаты обследования пункта:</svelte:fragment>
 			</AccordionItem>
 			<p>Опознавательный столб (знак)</p>
 			<RadioGroup class = "signIsPlaced" active="variant-filled-primary" hover="hover:variant-soft-primary">
@@ -196,20 +235,24 @@
 			</RadioGroup>
 			{/if}
 		</Accordion>
+		<div class="m-3">
 		<p>Фотография внешнего оформления (в перспективе)</p>
-		<FileButton name="files"/>
+		<input class="input" type="file" multiple />
+	</div>
+	<div class="m-3">
 		<p>Фотография марки центра вблизи (очищенной от пыли, грязи и других загрязнений, чтобы читалась надпись и номер марки данного центра)</p>
-		<FileButton name="files"/>
-		<p>Высота верхней марки</p>
+		<input class="input" type="file" multiple />
+	</div>
+		<p class="m-3">Высота верхней марки</p>
 		
-		<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+		<RadioGroup class="m-3" active="variant-filled-primary" hover="hover:variant-soft-primary">
 			<RadioItem bind:group={height}  name="upperMarkBelowGroundHeight" value="1">Выше уровня моря</RadioItem>
 			<RadioItem bind:group={height} name="upperMarkBelowGroundHeight" value="2">Ниже</RadioItem>
 			<div>
 			<TextInput type="int" name="height" label="Высота" value={$form.title} errors={$errors.title} />
 		</RadioGroup>	
-		<p>Спутниковые наблюдения на пункте</p>
-		<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+		<p class="m-3">Спутниковые наблюдения на пункте</p>
+		<RadioGroup class="m-3" active="variant-filled-primary" hover="hover:variant-soft-primary">
 			<RadioItem bind:group={sputnic}  name="satelliteObservability" value="1">Возможны</RadioItem>
 			<RadioItem bind:group={sputnic} name="satelliteObservability" value="2">Условно возможны</RadioItem>
 			<RadioItem bind:group={sputnic} name="satelliteObservability" value="3">Невозможны</RadioItem>
@@ -225,11 +268,12 @@
 		{/if}
 
 		<br />
-		<button class="btn variant-filled-primary" type="submit">Создать</button>
+		<button class="m-3 btn variant-filled-primary" type="submit">Создать</button>
 		<hr />
 	</form>
 </div>
 {/if}
+
 
 {#each records as record}
 	<article>
