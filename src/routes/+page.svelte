@@ -205,6 +205,7 @@
 		<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
 			<RadioItem bind:group={height}  name="upperMarkBelowGroundHeight" value="1">Выше уровня моря</RadioItem>
 			<RadioItem bind:group={height} name="upperMarkBelowGroundHeight" value="2">Ниже</RadioItem>
+			<div>
 			<TextInput type="int" name="height" label="Высота" value={$form.title} errors={$errors.title} />
 		</RadioGroup>	
 		<p>Спутниковые наблюдения на пункте</p>
