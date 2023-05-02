@@ -6,6 +6,7 @@
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { FileButton } from '@skeletonlabs/skeleton';
+	import img from '$lib/components/img.svelte';
 
 	export let data: PageData;
 
@@ -25,13 +26,18 @@
 	let stolb = 0,stolb_vost = 0, monolit1 = 0, monolit2 = 0, monolit3 = 0, outznak = 0, orp1 = 0, orp2 = 0, okopka = 0;
 	let monolit1_vost = 0, monolit2_vost = 0, monolit3_vost =0, outznak_vost = 0, orp1_vost = 0;
 	let orp2_vost = 0, okopka_vost = 0;
-	let file;
+	let file, trapecy = 0;
+	let src = "/static/Fig.jpg";
 </script>
 
 {#if data.user}
-	<form class="w-80" action="?/createRecord" method="POST" use:enhance>
-		<h3>Карточка обследования пункта ГГС</h3>
-		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} />
+<div class="grid justify-items-center w-3/4 text-sm font-serif">
+	<form action="?/createRecord" method="POST" use:enhance>
+		<h3 class="my-5 text-center">Карточка обследования пункта ГГС</h3>
+		<div class="m-3">
+		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} /></div>
+		<div class="m-3">
+
 		<TextInput type="int" name="number" label="Номер телефона" value={$form.title} errors={$errors.title} />
 		</div>
 		<div class="m-3">
@@ -49,6 +55,17 @@
 			<RadioItem bind:group={timeHorizontal} name="special" value="Special">Специалист</RadioItem>
 		</RadioGroup>
 	</div>
+	{#if timeHorizontal=="Special"}
+	<div class="m-3">
+	<TextInput type="text" name="type center" label="Тип центра" value={$form.title} errors={$errors.title} />
+</div>
+<div class="m-3">
+	<p>Трапеции</p>
+	<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+		<RadioItem bind:group={trapecy} name="special" value="1">1:50 000</RadioItem>
+		<RadioItem bind:group={trapecy} name="special" value="2">1:200 000</RadioItem>
+	</RadioGroup></div>
+	{/if}
 	<div class="m-3">
 		<TextInput type="text" name="markerName" label="Название геодезического пункта (если известно)" value={$form.title} errors={$errors.title} />
 	</div>	
@@ -93,7 +110,7 @@
 		{:else if forma == 3}
 			<RadioGroup class = "form_shtativ" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={material} name="form" value="1">Деревянный</RadioItem>
-				<RadioItem bind:group={material} name="form" value="2">Металлическый</RadioItem>
+				<RadioItem bind:group={material} name="form" value="2">Металлическй</RadioItem>
 			</RadioGroup>
 			<RadioGroup class = "form_shtativ" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={form_sht} name="form" value="1">Трехгранный</RadioItem>
@@ -119,10 +136,8 @@
 		<Accordion autocollapse class="card p-4 text-token">
 			<AccordionItem autocollapse>
 				<svelte:fragment slot="lead"><i class="fa-solid fa-film text-xl w-6 text-center" /></svelte:fragment>
-						<svelte:fragment slot="summary"><p class="font-bold">Результаты обследования пункта:</svelte:fragment>
+						<svelte:fragment slot="summary"><p>Результаты обследования пункта:</svelte:fragment>
 			</AccordionItem>
-
-
 			<p>Опознавательный столб (знак)</p>
 			<RadioGroup class = "signIsPlaced" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={stolb} name="signIsPlaced" value={1}>устанавливался</RadioItem>
@@ -222,10 +237,12 @@
 		</Accordion>
 		<div class="m-3">
 		<p>Фотография внешнего оформления (в перспективе)</p>
-		<FileButton file name="files"/>
+		<input class="input" type="file" multiple />
 	</div>
-		<p class="m-3">Фотография марки центра вблизи (очищенной от пыли, грязи и других загрязнений, чтобы читалась надпись и номер марки данного центра)</p>
-		<FileButton class="m-3" name="files"/>
+	<div class="m-3">
+		<p>Фотография марки центра вблизи (очищенной от пыли, грязи и других загрязнений, чтобы читалась надпись и номер марки данного центра)</p>
+		<input class="input" type="file" multiple />
+	</div>
 		<p class="m-3">Высота верхней марки</p>
 		
 		<RadioGroup class="m-3" active="variant-filled-primary" hover="hover:variant-soft-primary">
