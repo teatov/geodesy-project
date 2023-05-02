@@ -28,7 +28,8 @@
 </script>
 
 {#if data.user}
-	<form class="w-80" action="?/createRecord" method="POST" use:enhance>
+<div class="flex justify-center space-x-4">
+	<form class="w-1000" action="?/createRecord" method="POST" use:enhance>
 		<h3>Карточка обследования пункта ГГС</h3>
 		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} />
 		<TextInput type="int" name="number" label="Номер телефона" value={$form.title} errors={$errors.title} />
@@ -226,6 +227,7 @@
 		<button class="btn variant-filled-primary" type="submit">Создать</button>
 		<hr />
 	</form>
+</div>
 {/if}
 
 {#each records as record}

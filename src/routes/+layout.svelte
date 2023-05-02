@@ -6,19 +6,16 @@
 	export let data: PageData;
 </script>
 
-<div class="container mx-auto mt-0 space-y-8 px-4 py-3 md:max-w-4xl">
-	<nav>
+<div class="container mx-auto mt-0 space-y-10 px-4 py-10 md:max-w-4xl">
+	<nav class="flex justify-center space-x-4">
 		<ul>
-			<li><a href="/">На главную</a></li>
+			<a href="/" class="font-bold px-3 py-1 text-slate-700 rounded hover:bg-slate-100 hover:text-slate-900" role="button">На главную</a>
 			{#if !data.user}
-				<li>
-					<a href="/signup">Регистрация</a>
-				</li>
-				<li><a href="/login" role="button">Вход</a></li>
+					<a href="/signup" class="font-bold px-3 py-1 text-slate-700 rounded hover:bg-slate-100 hover:text-slate-900" role="button">Регистрация</a>
+					<a href="/login" class="font-bold px-3 py-1 text-slate-700 rounded hover:bg-slate-100 hover:text-slate-900" role="button">Вход</a>
 			{:else}
-				<li>
-					<a href="/profile" role="button">Личный кабинет</a>
-				</li>
+					<a href="/profile" class="font-bold px-3 py-1 text-slate-900 rounded
+					hover:bg-slate-100 hover:text-slate-900" role="button">Личный кабинет</a>
 			{/if}
 		</ul>
 	</nav>
