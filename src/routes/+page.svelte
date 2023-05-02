@@ -29,12 +29,9 @@
 </script>
 
 {#if data.user}
-<div class="grid justify-items-center w-3/4 text-sm font-serif">
-	<form action="?/createRecord" method="POST" use:enhance>
-		<h3 class="my-5 text-center">Карточка обследования пункта ГГС</h3>
-		<div class="m-3">
-		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} /></div>
-		<div class="m-3">
+	<form class="w-80" action="?/createRecord" method="POST" use:enhance>
+		<h3>Карточка обследования пункта ГГС</h3>
+		<TextInput type="text" name="Username" label="ФИО заполняющего" value={$form.title} errors={$errors.title} />
 		<TextInput type="int" name="number" label="Номер телефона" value={$form.title} errors={$errors.title} />
 		</div>
 		<div class="m-3">
