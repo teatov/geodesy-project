@@ -6,6 +6,10 @@
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { FileButton } from '@skeletonlabs/skeleton';
+	import schemaImage from '$lib/images/Fig.jpg';
+	import schemaImage1 from '$lib/images/punkt_draw.jpg';
+	import { Modal, modalStore } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
 
 	export let data: PageData;
 
@@ -15,6 +19,9 @@
 	$: ({ records } = data);
 
 	export const snapshot = { capture, restore };
+
+	export let parent: any;
+
 
 	let timeHorizontal: string = 'months';
 	let forma = 0, form_sht = 0;
@@ -28,6 +35,17 @@
 	let file;
 	let trapecy = 0;
 	let src = "/static/Fig.jpg";
+	
+	const cButton = 'fixed top-4 right-4 z-50 font-bold shadow-xl';
+	const cImage = 'max-w-[90%] max-h-[90%] rounded-container-token overflow-hidden shadow-xl';
+	const alert: ModalSettings = {
+	type: 'alert',
+	// Data
+	title: 'Example Alert',
+	body: 'This is an example modal.',
+	image: src={schemaImage},
+};
+	modalStore.close();
 </script>
 
 {#if data.user}
@@ -133,11 +151,17 @@
 		<TextInput type="text" name="coordinate" label="Координаты по GPS приёмнику (43.115468, 131.885431 и высота над эллипсоидом WGS-84))" value={$form.title} errors={$errors.title} />
 	</div>
 	<div class="m-3">
+		<Modal components={alert} />
 		<Accordion autocollapse class="card p-4 text-token">
 			<AccordionItem autocollapse>
 				<svelte:fragment slot="lead"><i class="fa-solid fa-film text-xl w-6 text-center" /></svelte:fragment>
 						<svelte:fragment slot="summary"><p>Результаты обследования пункта:</svelte:fragment>
+						<svelte:fragment slot="content"><img src={schemaImage} alt=""/>
+						<img src={schemaImage1} alt=""/>
+					</svelte:fragment>
+						
 			</AccordionItem>
+			
 			<p>Опознавательный столб (знак)</p>
 			<RadioGroup class = "signIsPlaced" active="variant-filled-primary" hover="hover:variant-soft-primary">
 				<RadioItem bind:group={stolb} name="signIsPlaced" value={1}>устанавливался</RadioItem>
@@ -182,8 +206,8 @@
 			{#if monolit3 == 1}
 			<p>Рекомендации по восстановлению монолита III и IV</p>
 			<RadioGroup class = "form" active="variant-filled-primary" hover="hover:variant-soft-primary">
-				<RadioItem bind:group={monolit2_vost} name="monoliths3And4AreOpened" value={1}>Необходимо восстановить</RadioItem>
-				<RadioItem bind:group={monolit2_vost} name="monoliths3And4AreOpened" value={2}>Нет необходимости</RadioItem>
+				<RadioItem bind:group={monolit3_vost} name="monoliths3And4AreOpened" value={1}>Необходимо восстановить</RadioItem>
+				<RadioItem bind:group={monolit3_vost} name="monoliths3And4AreOpened" value={2}>Нет необходимости</RadioItem>
 			</RadioGroup>
 			{/if}
 			<p>Наружный знак</p>
