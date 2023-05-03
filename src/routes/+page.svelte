@@ -6,7 +6,6 @@
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { FileButton } from '@skeletonlabs/skeleton';
-	import img from '$lib/components/img.svelte';
 
 	export let data: PageData;
 
@@ -26,7 +25,8 @@
 	let stolb = 0,stolb_vost = 0, monolit1 = 0, monolit2 = 0, monolit3 = 0, outznak = 0, orp1 = 0, orp2 = 0, okopka = 0;
 	let monolit1_vost = 0, monolit2_vost = 0, monolit3_vost =0, outznak_vost = 0, orp1_vost = 0;
 	let orp2_vost = 0, okopka_vost = 0;
-	let file, trapecy = 0;
+	let file;
+	let trapecy = 0;
 	let src = "/static/Fig.jpg";
 </script>
 
