@@ -11,7 +11,6 @@
 		<ul>
 			<a href="/" class="font-bold px-3 py-1 text-slate-700 rounded hover:bg-slate-100 hover:text-slate-900" role="button">На главную</a>
 			{#if !data.user}
-					<a href="/signup" class="font-bold px-3 py-1 text-slate-700 rounded hover:bg-slate-100 hover:text-slate-900" role="button">Регистрация</a>
 					<a href="/login" class="font-bold px-3 py-1 text-slate-700 rounded hover:bg-slate-100 hover:text-slate-900" role="button">Вход</a>
 			{:else}
 					<a href="/profile" class="font-bold px-3 py-1 text-slate-900 rounded

@@ -25,7 +25,7 @@
 
 	let timeHorizontal: string = 'months';
 	let forma = 0, form_sht = 0;
-	let signal =0;
+	let signal = 0;
 	let material = 0, form_pir = 0;
 	let sputnic = 0;
 	let height = 0;
