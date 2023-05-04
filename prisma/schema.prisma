@@ -70,7 +70,7 @@ model Survey {
   markerIndex String?
   markerName  String
   placingYear Int?
-  signType    String
+  signType    SignType
   signHeight  Float
   centerType  String?
   altitude    Int?
