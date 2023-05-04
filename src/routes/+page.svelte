@@ -22,36 +22,23 @@
 
 	export let parent: any;
 
-	let timeHorizontal: string = 'months';
-	let signTypeRadio = 0,
-		form_sht = 0;
-	let signal = 0;
-	let material = 0,
-		form_pir = 0;
-	let sputnic = 0;
-	let height = 0;
-	let stolb = 0,
-		stolb_vost = 0,
-		monolit1 = 0,
-		monolit2 = 0,
-		monolit3 = 0,
-		outznak = 0,
-		orp1 = 0,
-		orp2 = 0,
-		okopka = 0;
-	let monolit1_vost = 0,
-		monolit2_vost = 0,
-		monolit3_vost = 0,
-		outznak_vost = 0,
-		orp1_vost = 0;
-	let orp2_vost = 0,
-		okopka_vost = 0;
-	let file;
-	let trapecy = 0;
-	let src = '/static/Fig.jpg';
-
-	const cButton = 'fixed top-4 right-4 z-50 font-bold shadow-xl';
-	const cImage = 'max-w-[90%] max-h-[90%] rounded-container-token overflow-hidden shadow-xl';
+	let surveyorRole: string;
+	let signMainTypeRadio: number,
+		signalRadio: number,
+		pyramidMaterialRadio: number,
+		pyramidSidesRadio: number,
+		standMaterialRadio: number,
+		standSidesRadio: number,
+		postRadio: number,
+		signPresenceRadio: number,
+		monolith1IntegrityRadio: number,
+		monolith2OpennessRadio: number,
+		monoliths3And4OpennessRadio: number,
+		outerSignIntegrityRadio: number,
+		orp1IntegrityRadio: number,
+		orp2IntegrityRadio: number,
+		trenchReadabilityRadio: number,
+		satelliteObservabilityRadio: number;
 	const alert: ModalSettings = {
 		type: 'alert',
 		// Data
@@ -113,15 +100,15 @@
 			<div class="m-3">
 				<p>Кем выполнена работа</p>
 				<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-					<RadioItem bind:group={timeHorizontal} name="surveyorRole" value="volunteer">
+					<RadioItem bind:group={surveyorRole} name="surveyorRole" value="volunteer">
 						Волонтёр
 					</RadioItem>
-					<RadioItem bind:group={timeHorizontal} name="surveyorRole" value="specialist">
+					<RadioItem bind:group={surveyorRole} name="surveyorRole" value="specialist">
 						Специалист
 					</RadioItem>
 				</RadioGroup>
 			</div>
-			{#if timeHorizontal == 'specialist'}
+			{#if surveyorRole == 'specialist'}
 				<div class="m-3">
 					<TextInput
 						type="text"
@@ -132,11 +119,18 @@
 					/>
 				</div>
 				<div class="m-3">
-					<p>Трапеции</p>
-					<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+					<!-- <p>Трапеции</p> -->
+					<!-- <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
 						<RadioItem bind:group={trapecy} name="trapezes" value="1">1:50 000</RadioItem>
 						<RadioItem bind:group={trapecy} name="trapezes" value="2">1:200 000</RadioItem>
-					</RadioGroup>
+					</RadioGroup> -->
+					<TextInput
+						type="text"
+						name="trapezes"
+						label="Трапеции"
+						value={$form.title}
+						errors={$errors.title}
+					/>
 				</div>
 			{/if}
 			<div class="m-3">
@@ -181,73 +175,96 @@
 					</AccordionItem>
 					<div class="m-3">
 						<RadioGroup
-							class="signTypeRadio"
+							class="signMainTypeRadio"
 							active="variant-filled-primary"
 							hover="hover:variant-soft-primary"
 						>
-							<RadioItem bind:group={signTypeRadio} name="signMainType" value={1}>Сигнал</RadioItem>
-							<RadioItem bind:group={signTypeRadio} name="signMainType" value={2}>Пирамида</RadioItem>
-							<RadioItem bind:group={signTypeRadio} name="signMainType" value={3}>Штатив</RadioItem>
-							<RadioItem bind:group={signTypeRadio} name="signMainType" value={4}>Тур</RadioItem>
+							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={1}
+								>Сигнал</RadioItem
+							>
+							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={2}
+								>Пирамида</RadioItem
+							>
+							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={3}
+								>Штатив</RadioItem
+							>
+							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={4}>Тур</RadioItem
+							>
 						</RadioGroup>
 					</div>
 					<div class="m-3">
-						{#if signTypeRadio === 1}
+						{#if signMainTypeRadio === 1}
 							<RadioGroup
 								class="form_signal"
 								active="variant-filled-primary"
 								hover="hover:variant-soft-primary"
 							>
-								<RadioItem bind:group={signal} name="signType" value="1"
+								<RadioItem bind:group={signalRadio} name="signType" value="1"
 									><p><italic>Простой сигнал</italic> (высота от 6м. до 15м.)</p>
 								</RadioItem>
-								<RadioItem bind:group={signal} name="signType" value="2"
+								<RadioItem bind:group={signalRadio} name="signType" value="2"
 									><italic>Сложный сигнал </italic>(от 16м. до 55м.)
 								</RadioItem>
 							</RadioGroup>
-						{:else if signTypeRadio == 2}
+						{:else if signMainTypeRadio == 2}
 							<RadioGroup
 								class="form_piramida"
 								active="variant-filled-primary"
 								hover="hover:variant-soft-primary"
 							>
-								<RadioItem bind:group={material} name="signType" value="1">Деревянная</RadioItem>
-								<RadioItem bind:group={material} name="signType" value="2">Металлическая</RadioItem>
+								<RadioItem bind:group={pyramidMaterialRadio} name="signType" value="1"
+									>Деревянная</RadioItem
+								>
+								<RadioItem bind:group={pyramidMaterialRadio} name="signType" value="2"
+									>Металлическая</RadioItem
+								>
 							</RadioGroup>
 							<RadioGroup
 								class="form_piramida"
 								active="variant-filled-primary"
 								hover="hover:variant-soft-primary"
 							>
-								<RadioItem bind:group={form_pir} name="signType" value="1">Трехгранная</RadioItem>
-								<RadioItem bind:group={form_pir} name="signType" value="2">Четырехгранная</RadioItem>
+								<RadioItem bind:group={pyramidSidesRadio} name="signType" value="1"
+									>Трехгранная</RadioItem
+								>
+								<RadioItem bind:group={pyramidSidesRadio} name="signType" value="2"
+									>Четырехгранная</RadioItem
+								>
 							</RadioGroup>
-						{:else if signTypeRadio == 3}
+						{:else if signMainTypeRadio == 3}
 							<RadioGroup
 								class="form_shtativ"
 								active="variant-filled-primary"
 								hover="hover:variant-soft-primary"
 							>
-								<RadioItem bind:group={material} name="signType" value="1">Деревянный</RadioItem>
-								<RadioItem bind:group={material} name="signType" value="2">Металлический</RadioItem>
+								<RadioItem bind:group={standMaterialRadio} name="signType" value="1"
+									>Деревянный</RadioItem
+								>
+								<RadioItem bind:group={standMaterialRadio} name="signType" value="2"
+									>Металлический</RadioItem
+								>
 							</RadioGroup>
 							<RadioGroup
 								class="form_shtativ"
 								active="variant-filled-primary"
 								hover="hover:variant-soft-primary"
 							>
-								<RadioItem bind:group={form_sht} name="signType" value="1">Трехгранный</RadioItem>
-								<RadioItem bind:group={form_sht} name="signType" value="2">Четырехгранный</RadioItem>
+								<RadioItem bind:group={standSidesRadio} name="signType" value="1"
+									>Трехгранный</RadioItem
+								>
+								<RadioItem bind:group={standSidesRadio} name="signType" value="2"
+									>Четырехгранный</RadioItem
+								>
 							</RadioGroup>
-						{:else if signTypeRadio == 4}
+						{:else if signMainTypeRadio == 4}
 							<RadioGroup
 								class="form_tur"
 								active="variant-filled-primary"
 								hover="hover:variant-soft-primary"
 							>
-								<RadioItem bind:group={material} name="signType" value="1">Бетонный</RadioItem>
-								<RadioItem bind:group={material} name="signType" value="2">Каменный</RadioItem>
-								<RadioItem bind:group={material} name="signType" value="3">Кирпичный</RadioItem>
+								<RadioItem bind:group={postRadio} name="signType" value="1">Бетонный</RadioItem>
+								<RadioItem bind:group={postRadio} name="signType" value="2">Каменный</RadioItem>
+								<RadioItem bind:group={postRadio} name="signType" value="3">Кирпичный</RadioItem>
 							</RadioGroup>
 						{/if}
 					</div>
@@ -290,208 +307,115 @@
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={stolb} name="signPresence" value={1}>устанавливался</RadioItem>
-						<RadioItem bind:group={stolb} name="signPresence" value={2}>не устанавливался</RadioItem
+						<RadioItem bind:group={signPresenceRadio} name="signPresence" value={1}
+							>устанавливался</RadioItem
+						>
+						<RadioItem bind:group={signPresenceRadio} name="signPresence" value={2}
+							>не устанавливался</RadioItem
 						>
 					</RadioGroup>
-					{#if stolb == 1}
-						<p>Рекомендации по восстановлению опознавательного столба</p>
-						<RadioGroup
-							class="signIsPlaced"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
-						>
-							<RadioItem bind:group={stolb_vost} name="signIsPlaced" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={stolb_vost} name="signIsPlaced" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+
 					<p>Монолит I</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={monolit1} name="monolith1Integrity" value={1}
+						<RadioItem bind:group={monolith1IntegrityRadio} name="monolith1Integrity" value={1}
 							>Сохранился</RadioItem
 						>
-						<RadioItem bind:group={monolit1} name="monolith1Integrity" value={2}
+						<RadioItem bind:group={monolith1IntegrityRadio} name="monolith1Integrity" value={2}
 							>Не сохранился</RadioItem
 						>
 					</RadioGroup>
-					{#if monolit1 == 1}
-						<p>Рекомендации по восстановлению монолита I</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
-						>
-							<RadioItem bind:group={monolit1_vost} name="monolith1IsIntact" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={monolit1_vost} name="monolith1IsIntact " value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+
 					<p>Монолит II</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={monolit2} name="monolith2Openness" value={1}
+						<RadioItem bind:group={monolith2OpennessRadio} name="monolith2Openness" value={1}
 							>Вскрывался</RadioItem
 						>
-						<RadioItem bind:group={monolit2} name="monolith2Openness" value={2}
+						<RadioItem bind:group={monolith2OpennessRadio} name="monolith2Openness" value={2}
 							>Не вскрывался</RadioItem
 						>
 					</RadioGroup>
-					{#if monolit2 == 1}
-						<p>Рекомендации по восстановлению монолита II</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
-						>
-							<RadioItem bind:group={monolit2_vost} name="monolith2IsOpened" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={monolit2_vost} name="monolith2IsOpened" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+
 					<p>Монолиты III и IV</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={monolit3} name="monoliths3And4Openness" value={1}
-							>Вскрывался</RadioItem
+						<RadioItem
+							bind:group={monoliths3And4OpennessRadio}
+							name="monoliths3And4Openness"
+							value={1}>Вскрывался</RadioItem
 						>
-						<RadioItem bind:group={monolit3} name="monoliths3And4Openness" value={2}
-							>Не вскрывался</RadioItem
+						<RadioItem
+							bind:group={monoliths3And4OpennessRadio}
+							name="monoliths3And4Openness"
+							value={2}>Не вскрывался</RadioItem
 						>
 					</RadioGroup>
-					{#if monolit3 == 1}
-						<p>Рекомендации по восстановлению монолита III и IV</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
-						>
-							<RadioItem bind:group={monolit3_vost} name="monoliths3And4AreOpened" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={monolit3_vost} name="monoliths3And4AreOpened" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+
 					<p>Наружный знак</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={outznak} name="outerSignIntegrity" value={1}>Сохранился</RadioItem
+						<RadioItem bind:group={outerSignIntegrityRadio} name="outerSignIntegrity" value={1}
+							>Сохранился</RadioItem
 						>
-						<RadioItem bind:group={outznak} name="outerSignIntegrity" value={2}
+						<RadioItem bind:group={outerSignIntegrityRadio} name="outerSignIntegrity" value={2}
 							>Не сохранился</RadioItem
 						>
 					</RadioGroup>
-					{#if outznak == 1}
-						<p>Рекомендации по восстановлению наружного знака</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
-						>
-							<RadioItem bind:group={outznak_vost} name="outerSignIsIntact" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={outznak_vost} name="outerSignIsIntact" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+
 					<p>ОРП I</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={orp1} name="orp1Integrity" value={1}>Сохранился</RadioItem>
-						<RadioItem bind:group={orp1} name="orp1Integrity" value={2}>Не сохранился</RadioItem>
-					</RadioGroup>
-					{#if orp1 == 1}
-						<p>Рекомендации по восстановлению ОРП I</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
+						<RadioItem bind:group={orp1IntegrityRadio} name="orp1Integrity" value={1}
+							>Сохранился</RadioItem
 						>
-							<RadioItem bind:group={orp1_vost} name="orp1IsIntact" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={orp2_vost} name="orp1IsIntact" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+						<RadioItem bind:group={orp1IntegrityRadio} name="orp1Integrity" value={2}
+							>Не сохранился</RadioItem
+						>
+					</RadioGroup>
+
 					<p>ОРП II</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={orp2} name="orp2Integrity" value={1}>Сохранился</RadioItem>
-						<RadioItem bind:group={orp2} name="orp2Integrity" value={2}>Не сохранился</RadioItem>
-					</RadioGroup>
-					{#if orp2 == 1}
-						<p>Рекомендации по восстановлению ОРП II</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
+						<RadioItem bind:group={orp2IntegrityRadio} name="orp2Integrity" value={1}
+							>Сохранился</RadioItem
 						>
-							<RadioItem bind:group={orp2_vost} name="orp2IsIntact" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={orp2_vost} name="orp2IsIntact" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+						<RadioItem bind:group={orp2IntegrityRadio} name="orp2Integrity" value={2}
+							>Не сохранился</RadioItem
+						>
+					</RadioGroup>
+
 					<p>Окопка</p>
 					<RadioGroup
 						class="form"
 						active="variant-filled-primary"
 						hover="hover:variant-soft-primary"
 					>
-						<RadioItem bind:group={okopka} name="trenchReadability" value={1}>Читается</RadioItem>
-						<RadioItem bind:group={okopka} name="trenchReadability" value={2}>Не читается</RadioItem>
-					</RadioGroup>
-					{#if okopka == 1}
-						<p>Рекомендации по восстановлению окопки</p>
-						<RadioGroup
-							class="form"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
+						<RadioItem bind:group={trenchReadabilityRadio} name="trenchReadability" value={1}
+							>Читается</RadioItem
 						>
-							<RadioItem bind:group={okopka_vost} name="trenchIsReadable" value={1}
-								>Необходимо восстановить</RadioItem
-							>
-							<RadioItem bind:group={okopka_vost} name="trenchIsReadable" value={2}
-								>Нет необходимости</RadioItem
-							>
-						</RadioGroup>
-					{/if}
+						<RadioItem bind:group={trenchReadabilityRadio} name="trenchReadability" value={2}
+							>Не читается</RadioItem
+						>
+					</RadioGroup>
 				</Accordion>
 				<div class="m-3">
 					<p>Фотография внешнего оформления (в перспективе)</p>
@@ -506,35 +430,26 @@
 				</div>
 				<p class="m-3">Высота верхней марки</p>
 
-				<RadioGroup class="m-3" active="variant-filled-primary" hover="hover:variant-soft-primary">
-					<RadioItem bind:group={height} name="upperMarkBelowGroundHeight2" value="1"
-						>Выше уровня моря</RadioItem
-					>
-					<RadioItem bind:group={height} name="upperMarkBelowGroundHeight2" value="2">Ниже</RadioItem
-					>
-					<div>
-						<TextInput
-							type="int"
-							name="upperMarkBelowGroundHeight"
-							label="Высота"
-							value={$form.title}
-							errors={$errors.title}
-						/>
-					</div></RadioGroup
-				>
+				<TextInput
+					type="int"
+					name="upperMarkBelowGroundHeight"
+					label="Высота"
+					value={$form.title}
+					errors={$errors.title}
+				/>
 				<p class="m-3">Спутниковые наблюдения на пункте</p>
 				<RadioGroup class="m-3" active="variant-filled-primary" hover="hover:variant-soft-primary">
-					<RadioItem bind:group={sputnic} name="satelliteObservability" value="1"
+					<RadioItem bind:group={satelliteObservabilityRadio} name="satelliteObservability" value="1"
 						>Возможны</RadioItem
 					>
-					<RadioItem bind:group={sputnic} name="satelliteObservability" value="2"
+					<RadioItem bind:group={satelliteObservabilityRadio} name="satelliteObservability" value="2"
 						>Условно возможны</RadioItem
 					>
-					<RadioItem bind:group={sputnic} name="satelliteObservability" value="3"
+					<RadioItem bind:group={satelliteObservabilityRadio} name="satelliteObservability" value="3"
 						>Невозможны</RadioItem
 					>
 				</RadioGroup>
-				{#if sputnic == 3}
+				{#if satelliteObservabilityRadio == 3}
 					<TextArea
 						type="text"
 						name="satelliteObservabilityNotes"
