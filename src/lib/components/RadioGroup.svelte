@@ -18,7 +18,7 @@
 	<div class="flex gap-2">
 		<RadioGroup background="grow justify-around {errors ? 'input-error' : ''}">
 			{#each items as item}
-				<RadioItem bind:group={value} {name} value={item.value}>
+				<RadioItem class="underline" bind:group={value} {name} value={item.value}>
 					{item.label}
 				</RadioItem>
 			{/each}
