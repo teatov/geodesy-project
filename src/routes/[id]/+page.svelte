@@ -6,13 +6,13 @@
 
 	export let data: PageData;
 
-	const { form, errors, enhance } = superForm(data.form);
-	$: ({ record } = data);
+	// const { form, errors, enhance } = superForm(data.form);
+	$: ({ survey } = data);
 </script>
 
 <a href="/" role="button">Назад</a>
 
-<form class="w-80" action="?/updateRecord" method="POST" use:enhance>
+<!-- <form class="w-80" action="?/updateRecord" method="POST" use:enhance>
 	<h3>Редактировать {record.title}</h3>
 	<TextInput type="text" name="title" label="Заголовок" value={$form.title} errors={$errors.title} />
 
@@ -29,4 +29,8 @@
 
 <form action="?/deleteRecord" method="POST">
 	<button class="btn variant-filled-error" type="submit">Удалить</button>
-</form>
+</form> -->
+
+<p>{survey.federalSubject}</p>
+<p>{survey.latitude} {survey.longitude}</p>
+<p>{survey.markerName}</p>

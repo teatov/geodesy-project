@@ -1,30 +1,35 @@
 import type { PageServerLoad, Actions } from './$types';
 import prisma from '$lib/server/prisma';
+import {
+	SignType,
+	PresenceState,
+	IntegrityState,
+	OpennessState,
+	ReadabilityState,
+	ObservabilityState,
+} from '@prisma/client';
 import { fail, redirect, error } from '@sveltejs/kit';
 import { z } from 'zod';
 import { superValidate, setError } from 'sveltekit-superforms/server';
-import { recordSchema } from '$lib/zod/schema';
+import { setErrorMap, surveySchema } from '$lib/zod/schema';
+import type { AutocompleteOption } from '@skeletonlabs/skeleton';
+import Coordinates from 'coordinate-parser';
 
-const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
-	if (issue.code === z.ZodIssueCode.invalid_type) {
-		if (issue.expected === 'string') {
-			return { message: 'bad type!' };
-		}
-	}
-	if (issue.code === z.ZodIssueCode.custom) {
-		return { message: `less-than-${(issue.params || {}).minimum}` };
-	}
-	return { message: ctx.defaultError };
-};
-
-z.setErrorMap(customErrorMap);
+setErrorMap();
 
 export const load: PageServerLoad = async () => {
-	const records = await prisma.record.findMany();
+	const surveys = await prisma.survey.findMany();
 
-	const form = await superValidate(recordSchema);
+	const federalSubjectsRaw = await prisma.federalSubject.findMany();
 
-	return { form, records };
+	const federalSubjects: AutocompleteOption[] = federalSubjectsRaw.map((subject) => ({
+		label: subject.name,
+		value: subject.code,
+	}));
+
+	const form = await superValidate(surveySchema);
+
+	return { form, surveys, federalSubjects };
 };
 
 export const actions: Actions = {
@@ -34,32 +39,79 @@ export const actions: Actions = {
 			throw redirect(302, '/');
 		}
 
-		console.log(await request.formData());
-
-		// const form = await superValidate(request, recordSchema);
+		const form = await superValidate(request, surveySchema);
 		// console.log(form);
 
-		// if (!form.valid) {
-		// 	return fail(400, { form });
-		// }
+		if (!form.valid) {
+			return fail(400, { form });
+		}
 
-		// const { title, content } = form.data;
+		const data = form.data;
 
-		// try {
-		// 	await prisma.record.create({
-		// 		data: {
-		// 			title,
-		// 			content,
-		// 			authUserId: user.userId,
-		// 		},
-		// 	});
-		// } catch (error) {
-		// 	console.error(error);
+		const federalSubject = await prisma.federalSubject.findFirstOrThrow({
+			where: { name: data.federalSubject },
+		});
 
-		// 	const message = 'При создании записи возникла ошибка';
+		const coordinates = new Coordinates(data.coordinates);
 
-		// 	return setError(form, null, message);
-		// }
+		const newSurvey = {
+			surveyDate: data.surveyDate,
+			federalSubject: {
+				connect: {
+					code: federalSubject.code,
+				},
+			},
+			workBy: data.workBy,
+			latitude: coordinates.getLatitude(),
+			longitude: coordinates.getLongitude(),
+			markerIndex: data.markerIndex,
+			markerName: data.markerName,
+			placingYear: data.placingYear,
+			signType: SignType.NA,
+			signHeight: data.signHeight,
+			centerType: data.centerType,
+			altitude: data.altitude,
+			trapezes: data.trapezes,
+			signPresence: PresenceState.NA,
+			monolith1Integrity: IntegrityState.NA,
+			outerSignIntegrity: IntegrityState.NA,
+			orp1Integrity: IntegrityState.NA,
+			orp2Integrity: IntegrityState.NA,
+			monolith2Openness: OpennessState.NA,
+			monoliths3And4Openness: OpennessState.NA,
+			trenchReadability: ReadabilityState.NA,
+			centerMarkPhoto: {
+				connect: {
+					id: '0',
+				},
+			},
+			exteriorPhoto: {
+				connect: {
+					id: '0',
+				},
+			},
+			extraPhotos: {
+				connect: {
+					id: '0',
+				},
+			},
+			upperMarkAboveGroundHeight: data.upperMarkAboveGroundHeight,
+			satelliteObservability: ObservabilityState.NA,
+			extraNotes: data.extraNotes,
+			createdBy: data.createdBy,
+		};
+
+		try {
+			await prisma.survey.create({
+				data: newSurvey,
+			});
+		} catch (error) {
+			console.error(error);
+
+			const message = 'При создании записи возникла ошибка';
+
+			return setError(form, null, message);
+		}
 
 		return { status: 201 };
 	},

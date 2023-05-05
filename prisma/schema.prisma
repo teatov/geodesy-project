@@ -54,8 +54,6 @@ model AuthKey {
 
 model Survey {
   id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   surveyDate DateTime
 
@@ -94,15 +92,17 @@ model Survey {
   exteriorPhotoId   String
   extraPhotos       Photo[] @relation("ExtraPhotos")
 
-  upperMarkBelowGroundHeight Float
+  upperMarkAboveGroundHeight Float
 
   satelliteObservability      ObservabilityState
-  satelliteObservabilityNotes String?
 
   extraNotes String?
 
   createdBy  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   approvedBy String?
+  approvedAt DateTime?
 }
 
 enum SignType {
@@ -119,7 +119,7 @@ enum SignType {
   STAND_METAL_FOUR_SIDED
   POST_CONCRETE
   POST_ROCK
-  POST_BRICH
+  POST_BRICK
 }
 
 enum PresenceState {
@@ -137,7 +137,7 @@ enum IntegrityState {
 enum OpennessState {
   NA
   OPENED
-  NOT_CLOSED
+  NOT_OPENED
 }
 
 enum ReadabilityState {

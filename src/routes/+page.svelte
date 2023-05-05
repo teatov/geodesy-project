@@ -1,487 +1,338 @@
 <script lang="ts">
 	import TextArea from '$lib/components/TextArea.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
+	import RadioGroup from '$lib/components/RadioGroup.svelte';
+	import Autocomplete from '$lib/components/Autocomplete.svelte';
 	import type { PageData } from './$types';
+	import type { ModalSettings } from '@skeletonlabs/skeleton';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
-	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
-	import { FileButton } from '@skeletonlabs/skeleton';
+	import { radioItems } from '$lib/infoStorage';
+	import { modals } from '$lib/modalStorage';
 	import schemaImage from '$lib/images/Fig.jpg';
 	import schemaImage1 from '$lib/images/punkt_draw.jpg';
-	import { Modal, modalStore } from '@skeletonlabs/skeleton';
-	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
 
 	export let data: PageData;
+
+	const { federalSubjects } = data;
+
+	$: ({ surveys } = data);
 
 	const { form, errors, enhance, capture, restore } = superForm(data.form, {
 		resetForm: false,
 	});
-	$: ({ records } = data);
 
 	export const snapshot = { capture, restore };
 
 	export let parent: any;
 
-	let surveyorRole: string;
-	let signMainTypeRadio: number,
-		signalRadio: number,
-		pyramidMaterialRadio: number,
-		pyramidSidesRadio: number,
-		standMaterialRadio: number,
-		standSidesRadio: number,
-		postRadio: number,
-		signPresenceRadio: number,
-		monolith1IntegrityRadio: number,
-		monolith2OpennessRadio: number,
-		monoliths3And4OpennessRadio: number,
-		outerSignIntegrityRadio: number,
-		orp1IntegrityRadio: number,
-		orp2IntegrityRadio: number,
-		trenchReadabilityRadio: number,
-		satelliteObservabilityRadio: number;
-	const alert: ModalSettings = {
-		type: 'alert',
-		// Data
-		title: 'Example Alert',
-		body: 'This is an example modal.',
-		image: schemaImage,
-	};
+	let federalDistrictInputValue = '';
+
+	// let surveyorRoleRadio: string,
+	// 	signMainTypeRadio: string,
+	// 	signalRadio: string,
+	// 	signMateialRadio: string,
+	// 	signSidesRadio: string,
+	// 	postRadio: string,
+	// 	signPresenceRadio: string,
+	// 	monolith1IntegrityRadio: string,
+	// 	monolith2OpennessRadio: string,
+	// 	monoliths3And4OpennessRadio: string,
+	// 	outerSignIntegrityRadio: string,
+	// 	orp1IntegrityRadio: string,
+	// 	orp2IntegrityRadio: string,
+	// 	trenchReadabilityRadio: string,
+	// 	satelliteObservabilityRadio: string;
 </script>
 
+<svelte:head>
+	<title>Заполнение карточки обследования</title>
+	<meta name="description" content="Заполнение карточки обследования геодезического пункта" />
+</svelte:head>
+
 {#if data.user}
-	<div class="grid w-3/4 justify-items-center font-serif text-sm">
+	<div>
 		<form action="?/createRecord" method="POST" use:enhance>
 			<h3 class="my-5 text-center">Карточка обследования пункта ГГС</h3>
-			<div class="m-3">
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 				<TextInput
 					type="text"
 					name="workBy"
-					label="ФИО заполняющего"
-					value={$form.title}
-					errors={$errors.title}
+					label="Кем выполнены работы по обследованию *"
+					value={$form.workBy}
+					errors={$errors.workBy}
 				/>
-			</div>
-			<!-- <div class="m-3">
-				<TextInput
-					type="int"
-					name="number"
-					label="Номер телефона"
-					value={$form.title}
-					errors={$errors.title}
-				/>
-			</div> -->
-			<div class="m-3">
-				<TextInput
-					type="text"
-					name="email"
-					label="Электронная почта"
-					value={$form.title}
-					errors={$errors.title}
-				/>
-			</div>
-			<div class="m-3">
 				<TextInput
 					type="date"
 					name="surveyDate"
-					label="Дата производства работ"
-					value={$form.title}
-					errors={$errors.title}
+					label="Дата производства работ *"
+					value={$form.surveyDate ? $form.surveyDate.toISOString().split('T')[0] : ''}
+					errors={$errors.surveyDate}
 				/>
-			</div>
-			<div class="m-3">
-				<TextInput
-					type="text"
+				<hr class="md:col-span-2" />
+				<Autocomplete
 					name="federalSubject"
-					label="Субъект Российской Федерации"
-					value={$form.title}
-					errors={$errors.title}
+					bind:value={federalDistrictInputValue}
+					options={federalSubjects}
+					label="Субъект Российской Федерации *"
+					class="md:col-span-2"
 				/>
-			</div>
-			<div class="m-3">
-				<p>Кем выполнена работа</p>
-				<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-					<RadioItem bind:group={surveyorRole} name="surveyorRole" value="volunteer">
-						Волонтёр
-					</RadioItem>
-					<RadioItem bind:group={surveyorRole} name="surveyorRole" value="specialist">
-						Специалист
-					</RadioItem>
-				</RadioGroup>
-			</div>
-			{#if surveyorRole == 'specialist'}
-				<div class="m-3">
-					<TextInput
-						type="text"
-						name="centerType"
-						label="Тип центра"
-						value={$form.title}
-						errors={$errors.title}
-					/>
-				</div>
-				<div class="m-3">
-					<!-- <p>Трапеции</p> -->
-					<!-- <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-						<RadioItem bind:group={trapecy} name="trapezes" value="1">1:50 000</RadioItem>
-						<RadioItem bind:group={trapecy} name="trapezes" value="2">1:200 000</RadioItem>
-					</RadioGroup> -->
-					<TextInput
-						type="text"
-						name="trapezes"
-						label="Трапеции"
-						value={$form.title}
-						errors={$errors.title}
-					/>
-				</div>
-			{/if}
-			<div class="m-3">
-				<TextInput
-					type="text"
-					name="markerName"
-					label="Название геодезического пункта (если известно)"
-					value={$form.title}
-					errors={$errors.title}
-				/>
-			</div>
-			<div class="m-3">
 				<TextInput
 					type="text"
 					name="markerIndex"
-					label="Номер геодезического пункта (если известно)"
-					value={$form.title}
-					errors={$errors.title}
+					label="№ по каталогу/индекс пункта"
+					value={$form.markerIndex}
+					errors={$errors.markerIndex}
 				/>
-			</div>
-			<div class="m-3">
-				<Accordion autocollapse class="card p-4 text-token">
-					<AccordionItem autocollapse>
-						<svelte:fragment slot="lead"
-							><i class="fa-solid fa-film w-6 text-center text-xl" /></svelte:fragment
-						>
-						<svelte:fragment slot="summary"><p>Тип знака (наружное оформление):</p></svelte:fragment
-						>
-						<svelte:fragment slot="content">
-							<p>
-								<strong>Сигнал </strong> (состоит из двух вложенных друг в друга конструкций — внешней
-								и внутренней усеченных пирамид, или ферм, одна из которых несёт площадку для наблюдателя
-								и визирную цель, а другая — столик для прибора.)
-							</p>
-							<p>
-								<strong>Пирамида</strong> (обычно высота 5-8 м, может быть определена путем измерения
-								с точностью до 0.1 м и проставлена в ячейку)
-							</p>
-							<p><strong>Штатив</strong> (имеет высоту инструментального столика 1.2м.)</p>
-							<p><strong>Тур</strong> (аналог штатива, устанавливается на столбе)</p>
-						</svelte:fragment>
-					</AccordionItem>
-					<div class="m-3">
-						<RadioGroup
-							class="signMainTypeRadio"
-							active="variant-filled-primary"
-							hover="hover:variant-soft-primary"
-						>
-							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={1}
-								>Сигнал</RadioItem
-							>
-							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={2}
-								>Пирамида</RadioItem
-							>
-							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={3}
-								>Штатив</RadioItem
-							>
-							<RadioItem bind:group={signMainTypeRadio} name="signMainType" value={4}>Тур</RadioItem
-							>
-						</RadioGroup>
-					</div>
-					<div class="m-3">
-						{#if signMainTypeRadio === 1}
-							<RadioGroup
-								class="form_signal"
-								active="variant-filled-primary"
-								hover="hover:variant-soft-primary"
-							>
-								<RadioItem bind:group={signalRadio} name="signType" value="1"
-									><p><italic>Простой сигнал</italic> (высота от 6м. до 15м.)</p>
-								</RadioItem>
-								<RadioItem bind:group={signalRadio} name="signType" value="2"
-									><italic>Сложный сигнал </italic>(от 16м. до 55м.)
-								</RadioItem>
-							</RadioGroup>
-						{:else if signMainTypeRadio == 2}
-							<RadioGroup
-								class="form_piramida"
-								active="variant-filled-primary"
-								hover="hover:variant-soft-primary"
-							>
-								<RadioItem bind:group={pyramidMaterialRadio} name="signType" value="1"
-									>Деревянная</RadioItem
-								>
-								<RadioItem bind:group={pyramidMaterialRadio} name="signType" value="2"
-									>Металлическая</RadioItem
-								>
-							</RadioGroup>
-							<RadioGroup
-								class="form_piramida"
-								active="variant-filled-primary"
-								hover="hover:variant-soft-primary"
-							>
-								<RadioItem bind:group={pyramidSidesRadio} name="signType" value="1"
-									>Трехгранная</RadioItem
-								>
-								<RadioItem bind:group={pyramidSidesRadio} name="signType" value="2"
-									>Четырехгранная</RadioItem
-								>
-							</RadioGroup>
-						{:else if signMainTypeRadio == 3}
-							<RadioGroup
-								class="form_shtativ"
-								active="variant-filled-primary"
-								hover="hover:variant-soft-primary"
-							>
-								<RadioItem bind:group={standMaterialRadio} name="signType" value="1"
-									>Деревянный</RadioItem
-								>
-								<RadioItem bind:group={standMaterialRadio} name="signType" value="2"
-									>Металлический</RadioItem
-								>
-							</RadioGroup>
-							<RadioGroup
-								class="form_shtativ"
-								active="variant-filled-primary"
-								hover="hover:variant-soft-primary"
-							>
-								<RadioItem bind:group={standSidesRadio} name="signType" value="1"
-									>Трехгранный</RadioItem
-								>
-								<RadioItem bind:group={standSidesRadio} name="signType" value="2"
-									>Четырехгранный</RadioItem
-								>
-							</RadioGroup>
-						{:else if signMainTypeRadio == 4}
-							<RadioGroup
-								class="form_tur"
-								active="variant-filled-primary"
-								hover="hover:variant-soft-primary"
-							>
-								<RadioItem bind:group={postRadio} name="signType" value="1">Бетонный</RadioItem>
-								<RadioItem bind:group={postRadio} name="signType" value="2">Каменный</RadioItem>
-								<RadioItem bind:group={postRadio} name="signType" value="3">Кирпичный</RadioItem>
-							</RadioGroup>
-						{/if}
-					</div>
-				</Accordion>
-			</div>
-			<div class="m-3">
+				<TextInput
+					type="text"
+					name="markerName"
+					label="Название пункта, класс, № марки *"
+					value={$form.markerName}
+					errors={$errors.markerName}
+				/>
+				<TextInput
+					type="text"
+					name="placingYear"
+					label="Год закладки"
+					value={String($form.placingYear)}
+					errors={$errors.placingYear}
+				/>
+				<TextInput
+					type="text"
+					name="signHeight"
+					label="Высота знака (в метрах) *"
+					value={String($form.signHeight)}
+					errors={$errors.signHeight}
+				/>
+				<hr class="md:col-span-2" />
+				<TextInput
+					type="text"
+					name="centerType"
+					label="Тип центра"
+					value={$form.centerType}
+					errors={$errors.centerType}
+				/>
 				<TextInput
 					type="text"
 					name="altitude"
-					label="Высота над уровнем моря (может быть снята с карты или с показаний GPS приёмника) "
-					value={$form.title}
-					errors={$errors.title}
+					label="Высота над уровнем моря (в метрах)"
+					value={String($form.altitude)}
+					errors={$errors.altitude}
 				/>
-			</div>
-			<div class="m-3">
+				<TextInput
+					type="text"
+					name="trapezes"
+					label="Трапеции"
+					value={$form.trapezes}
+					errors={$errors.trapezes}
+				/>
 				<TextInput
 					type="text"
 					name="coordinates"
-					label="Координаты"
-					value={$form.title}
-					errors={$errors.title}
+					label="Координаты *"
+					value={$form.coordinates}
+					errors={$errors.coordinates}
+					modal={modals.coordinates}
 				/>
-			</div>
-			<div class="m-3">
-				<Accordion autocollapse class="card p-4 text-token">
-					<AccordionItem autocollapse>
-						<svelte:fragment slot="lead"
-							><i class="fa-solid fa-film w-6 text-center text-xl" /></svelte:fragment
-						>
-						<svelte:fragment slot="summary"><p>Результаты обследования пункта:</p></svelte:fragment>
-						<svelte:fragment slot="content"
-							><img src={schemaImage} alt="" />
-							<img src={schemaImage1} alt="" />
-						</svelte:fragment>
-					</AccordionItem>
-
-					<p>Опознавательный столб (знак)</p>
-					<RadioGroup
-						class="signIsPlaced"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={signPresenceRadio} name="signPresence" value={1}
-							>устанавливался</RadioItem
-						>
-						<RadioItem bind:group={signPresenceRadio} name="signPresence" value={2}
-							>не устанавливался</RadioItem
-						>
-					</RadioGroup>
-
-					<p>Монолит I</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={monolith1IntegrityRadio} name="monolith1Integrity" value={1}
-							>Сохранился</RadioItem
-						>
-						<RadioItem bind:group={monolith1IntegrityRadio} name="monolith1Integrity" value={2}
-							>Не сохранился</RadioItem
-						>
-					</RadioGroup>
-
-					<p>Монолит II</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={monolith2OpennessRadio} name="monolith2Openness" value={1}
-							>Вскрывался</RadioItem
-						>
-						<RadioItem bind:group={monolith2OpennessRadio} name="monolith2Openness" value={2}
-							>Не вскрывался</RadioItem
-						>
-					</RadioGroup>
-
-					<p>Монолиты III и IV</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem
-							bind:group={monoliths3And4OpennessRadio}
-							name="monoliths3And4Openness"
-							value={1}>Вскрывался</RadioItem
-						>
-						<RadioItem
-							bind:group={monoliths3And4OpennessRadio}
-							name="monoliths3And4Openness"
-							value={2}>Не вскрывался</RadioItem
-						>
-					</RadioGroup>
-
-					<p>Наружный знак</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={outerSignIntegrityRadio} name="outerSignIntegrity" value={1}
-							>Сохранился</RadioItem
-						>
-						<RadioItem bind:group={outerSignIntegrityRadio} name="outerSignIntegrity" value={2}
-							>Не сохранился</RadioItem
-						>
-					</RadioGroup>
-
-					<p>ОРП I</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={orp1IntegrityRadio} name="orp1Integrity" value={1}
-							>Сохранился</RadioItem
-						>
-						<RadioItem bind:group={orp1IntegrityRadio} name="orp1Integrity" value={2}
-							>Не сохранился</RadioItem
-						>
-					</RadioGroup>
-
-					<p>ОРП II</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={orp2IntegrityRadio} name="orp2Integrity" value={1}
-							>Сохранился</RadioItem
-						>
-						<RadioItem bind:group={orp2IntegrityRadio} name="orp2Integrity" value={2}
-							>Не сохранился</RadioItem
-						>
-					</RadioGroup>
-
-					<p>Окопка</p>
-					<RadioGroup
-						class="form"
-						active="variant-filled-primary"
-						hover="hover:variant-soft-primary"
-					>
-						<RadioItem bind:group={trenchReadabilityRadio} name="trenchReadability" value={1}
-							>Читается</RadioItem
-						>
-						<RadioItem bind:group={trenchReadabilityRadio} name="trenchReadability" value={2}
-							>Не читается</RadioItem
-						>
-					</RadioGroup>
-				</Accordion>
-				<div class="m-3">
-					<p>Фотография внешнего оформления (в перспективе)</p>
-					<input class="input" name="centerMarkPhoto" type="file" accept="image/*" multiple />
-				</div>
-				<div class="m-3">
-					<p>
-						Фотография марки центра вблизи (очищенной от пыли, грязи и других загрязнений, чтобы
-						читалась надпись и номер марки данного центра)
-					</p>
-					<input class="input" type="file" accept="image/*" multiple />
-				</div>
-				<p class="m-3">Высота верхней марки</p>
-
-				<TextInput
-					type="int"
-					name="upperMarkBelowGroundHeight"
-					label="Высота"
-					value={$form.title}
-					errors={$errors.title}
+				<hr class="md:col-span-2" />
+				<RadioGroup
+					name="signMainType"
+					label="Тип знака *"
+					items={radioItems.signMainType}
+					bind:value={$form.signMainType}
+					errors={$errors.signMainType}
+					class="md:col-span-2"
+					modal={modals.signType}
 				/>
-				<p class="m-3">Спутниковые наблюдения на пункте</p>
-				<RadioGroup class="m-3" active="variant-filled-primary" hover="hover:variant-soft-primary">
-					<RadioItem bind:group={satelliteObservabilityRadio} name="satelliteObservability" value="1"
-						>Возможны</RadioItem
-					>
-					<RadioItem bind:group={satelliteObservabilityRadio} name="satelliteObservability" value="2"
-						>Условно возможны</RadioItem
-					>
-					<RadioItem bind:group={satelliteObservabilityRadio} name="satelliteObservability" value="3"
-						>Невозможны</RadioItem
-					>
-				</RadioGroup>
-				{#if satelliteObservabilityRadio == 3}
-					<TextArea
-						type="text"
-						name="satelliteObservabilityNotes"
-						label="Укажите причину невозможности спутникового наблюдения - наличие и расстояние до лесного массива, зданий, сооружений и других объектов, мешающих видимости с пункта"
-						value={$form.title}
-						errors={$errors.title}
+				{#if $form.signMainType === 'SIGNAL'}
+					<RadioGroup
+						name="signalType"
+						label="Тип сигнала *"
+						items={radioItems.signal}
+						bind:value={$form.signalType}
+						errors={$errors.signalType}
+						class="md:col-span-2"
 					/>
 				{/if}
-				<br />
-
-				{#if $errors._errors}
-					<br />
-					<small class="text-error-500">{$errors._errors}</small>
+				{#if ['PYRAMID', 'STAND'].includes($form.signMainType)}
+					<RadioGroup
+						name="signMaterial"
+						label={`Материал ${$form.signMainType === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
+						items={radioItems.signMateial}
+						bind:value={$form.signMaterial}
+						errors={$errors.signMaterial}
+					/>
+					<RadioGroup
+						name="signSides"
+						label={`Форма ${$form.signMainType === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
+						items={radioItems.signSides}
+						bind:value={$form.signSides}
+						errors={$errors.signSides}
+					/>
 				{/if}
+				{#if $form.signMainType == 'POST'}
+					<RadioGroup
+						name="postType"
+						label="Материал тура *"
+						items={radioItems.post}
+						bind:value={$form.postType}
+						errors={$errors.postType}
+						class="md:col-span-2"
+					/>
+				{/if}
+				<hr class="md:col-span-2" />
+				<RadioGroup
+					name="signPresence"
+					label="Опознавательный столб (знак) *"
+					items={radioItems.presence}
+					bind:value={$form.signPresence}
+					errors={$errors.signPresence}
+				/>
 
-				<br />
-				<button class="btn variant-filled-primary m-3" type="submit">Создать</button>
-				<hr />
+				<RadioGroup
+					name="monolith1Integrity"
+					label="Монолит I *"
+					items={radioItems.integrity}
+					bind:value={$form.monolith1Integrity}
+					errors={$errors.monolith1Integrity}
+				/>
+				<RadioGroup
+					name="monolith2Openness"
+					label="Монолит II *"
+					items={radioItems.openness}
+					bind:value={$form.monolith2Openness}
+					errors={$errors.monolith2Openness}
+				/>
+				<RadioGroup
+					name="monoliths3And4Openness"
+					label="Монолиты III и IV *"
+					items={radioItems.openness}
+					bind:value={$form.monoliths3And4Openness}
+					errors={$errors.monoliths3And4Openness}
+				/>
+				<RadioGroup
+					name="outerSignIntegrity"
+					label="Наружный знак *"
+					items={radioItems.integrity}
+					bind:value={$form.outerSignIntegrity}
+					errors={$errors.outerSignIntegrity}
+				/>
+
+				<RadioGroup
+					name="orp1Integrity"
+					label="ОРП I *"
+					items={radioItems.integrity}
+					bind:value={$form.orp1Integrity}
+					errors={$errors.orp1Integrity}
+				/>
+				<RadioGroup
+					name="orp2Integrity"
+					label="ОРП II *"
+					items={radioItems.integrity}
+					bind:value={$form.orp2Integrity}
+					errors={$errors.orp2Integrity}
+				/>
+				<RadioGroup
+					name="trenchReadability"
+					label="Окопка *"
+					items={radioItems.readability}
+					bind:value={$form.trenchReadability}
+					errors={$errors.trenchReadability}
+				/>
+				<hr class="md:col-span-2" />
+				<TextInput
+					type="text"
+					name="upperMarkAboveGroundHeight"
+					label="Высота верхней марки (в метрах) *"
+					value={String($form.upperMarkAboveGroundHeight)}
+					errors={$errors.upperMarkAboveGroundHeight}
+				/>
+				<RadioGroup
+					name="satelliteObservability"
+					label="Спутниковые наблюдения на пункте *"
+					items={radioItems.satelliteObservability}
+					bind:value={$form.satelliteObservability}
+					errors={$errors.satelliteObservability}
+				/>
+				<hr class="md:col-span-2" />
+				<TextInput
+					type="file"
+					name="exteriorPhoto"
+					label="Фотография внешнего оформления (в перспективе) *"
+					value={$form.exteriorPhoto}
+					errors={$errors.exteriorPhoto}
+					accept="image/*"
+				/>
+				<TextInput
+					type="file"
+					name="centerMarkPhoto"
+					label="Фотография марки центра вблизи *"
+					value={$form.centerMarkPhoto}
+					errors={$errors.centerMarkPhoto}
+					accept="image/*"
+					modal={modals.centerMarkPhoto}
+				/>
+				<div class="md:col-span-2">
+					<TextInput
+						type="file"
+						name="extraPhotos"
+						label="Дополнительные фотографии"
+						value={$form.extraPhotos}
+						errors={$errors.extraPhotos}
+						accept="image/*"
+						multiple
+					/>
+				</div>
+				<hr class="md:col-span-2" />
+				<div class="md:col-span-2">
+					<TextArea
+						type="text"
+						name="extraNotes"
+						label="Примечания"
+						value={$form.extraNotes}
+						errors={$errors.extraNotes}
+					/>
+				</div>
+
+				<div class="md:col-span-2">
+					<TextInput
+						type="text"
+						name="createdBy"
+						label="Составил(а) *"
+						value={String($form.createdBy)}
+						errors={$errors.createdBy}
+					/>
+				</div>
 			</div>
+			<hr class="md:col-span-2" />
+			{#if $errors._errors}
+				<small class="text-error-500">{$errors._errors}</small>
+			{/if}
+
+			<div class="my-12 flex justify-center">
+				<button class="btn variant-filled-primary" type="submit">Создать</button>
+			</div>
+			<hr />
 		</form>
 	</div>
 {/if}
 
-{#each records as record}
+{#each surveys as survey}
 	<article>
-		<strong>{record.title}</strong>
+		<strong>{survey.markerName}</strong>
 		<p>
-			{record.content}
+			{survey.latitude}
+			{survey.longitude}
 		</p>
-		{#if record.authUserId === data.user?.userId}
+		<p>
+			{survey.createdBy}
+		</p>
+		<!-- {#if record.authUserId === data.user?.userId}
 			<a href="/{record.id}" role="button">Редактировать</a>
-		{/if}
+		{/if} -->
+		<form action="/{survey.id}/?/createDocx" method="POST">
+			<button class="btn variant-filled-secondary" type="submit">Скачать .docx</button>
+		</form>
 		<hr />
 	</article>
 {/each}
