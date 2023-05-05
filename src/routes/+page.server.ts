@@ -34,30 +34,32 @@ export const actions: Actions = {
 			throw redirect(302, '/');
 		}
 
-		const form = await superValidate(request, recordSchema);
-		console.log(form);
+		console.log(await request.formData());
 
-		if (!form.valid) {
-			return fail(400, { form });
-		}
+		// const form = await superValidate(request, recordSchema);
+		// console.log(form);
 
-		const { title, content } = form.data;
+		// if (!form.valid) {
+		// 	return fail(400, { form });
+		// }
 
-		try {
-			await prisma.record.create({
-				data: {
-					title,
-					content,
-					authUserId: user.userId,
-				},
-			});
-		} catch (error) {
-			console.error(error);
+		// const { title, content } = form.data;
 
-			const message = 'При создании записи возникла ошибка';
+		// try {
+		// 	await prisma.record.create({
+		// 		data: {
+		// 			title,
+		// 			content,
+		// 			authUserId: user.userId,
+		// 		},
+		// 	});
+		// } catch (error) {
+		// 	console.error(error);
 
-			return setError(form, null, message);
-		}
+		// 	const message = 'При создании записи возникла ошибка';
+
+		// 	return setError(form, null, message);
+		// }
 
 		return { status: 201 };
 	},
