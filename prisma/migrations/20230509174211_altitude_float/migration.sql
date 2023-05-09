@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Survey" ALTER COLUMN "altitude" SET DATA TYPE DOUBLE PRECISION;

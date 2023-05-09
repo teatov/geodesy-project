@@ -5,7 +5,7 @@
 	import InfoButton from '$lib/components/InfoButton.svelte';
 
 	export let name: string;
-	export let value: string | undefined;
+	export let value: string | undefined = undefined;
 	export let label: string | undefined;
 	export let modal: ModalSettings | undefined = undefined;
 	export let errors: string[] | undefined;

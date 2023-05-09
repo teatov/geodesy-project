@@ -27,21 +27,20 @@
 
 	let federalDistrictInputValue = '';
 
-	// let surveyorRoleRadio: string,
-	// 	signMainTypeRadio: string,
-	// 	signalRadio: string,
-	// 	signMateialRadio: string,
-	// 	signSidesRadio: string,
-	// 	postRadio: string,
-	// 	signPresenceRadio: string,
-	// 	monolith1IntegrityRadio: string,
-	// 	monolith2OpennessRadio: string,
-	// 	monoliths3And4OpennessRadio: string,
-	// 	outerSignIntegrityRadio: string,
-	// 	orp1IntegrityRadio: string,
-	// 	orp2IntegrityRadio: string,
-	// 	trenchReadabilityRadio: string,
-	// 	satelliteObservabilityRadio: string;
+	let signMainTypeRadio: string,
+		signalRadio: string,
+		signMateialRadio: string,
+		signSidesRadio: string,
+		postRadio: string,
+		signPresenceRadio: string,
+		monolith1IntegrityRadio: string,
+		monolith2OpennessRadio: string,
+		monoliths3And4OpennessRadio: string,
+		outerSignIntegrityRadio: string,
+		orp1IntegrityRadio: string,
+		orp2IntegrityRadio: string,
+		trenchReadabilityRadio: string,
+		satelliteObservabilityRadio: string;
 </script>
 
 <svelte:head>
@@ -75,6 +74,7 @@
 					options={federalSubjects}
 					label="Субъект Российской Федерации *"
 					class="md:col-span-2"
+					errors={$errors.federalSubject}
 				/>
 				<TextInput
 					type="text"
@@ -139,43 +139,43 @@
 					name="signMainType"
 					label="Тип знака *"
 					items={radioItems.signMainType}
-					bind:value={$form.signMainType}
+					bind:value={signMainTypeRadio}
 					errors={$errors.signMainType}
 					class="md:col-span-2"
 					modal={modals.signType}
 				/>
-				{#if $form.signMainType === 'SIGNAL'}
+				{#if signMainTypeRadio === 'SIGNAL'}
 					<RadioGroup
 						name="signalType"
 						label="Тип сигнала *"
 						items={radioItems.signal}
-						bind:value={$form.signalType}
+						bind:value={signalRadio}
 						errors={$errors.signalType}
 						class="md:col-span-2"
 					/>
 				{/if}
-				{#if ['PYRAMID', 'STAND'].includes($form.signMainType)}
+				{#if ['PYRAMID', 'STAND'].includes(signMainTypeRadio)}
 					<RadioGroup
 						name="signMaterial"
-						label={`Материал ${$form.signMainType === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
+						label={`Материал ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
 						items={radioItems.signMateial}
-						bind:value={$form.signMaterial}
+						bind:value={signMateialRadio}
 						errors={$errors.signMaterial}
 					/>
 					<RadioGroup
 						name="signSides"
-						label={`Форма ${$form.signMainType === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
+						label={`Форма ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
 						items={radioItems.signSides}
-						bind:value={$form.signSides}
+						bind:value={signSidesRadio}
 						errors={$errors.signSides}
 					/>
 				{/if}
-				{#if $form.signMainType == 'POST'}
+				{#if signMainTypeRadio == 'POST'}
 					<RadioGroup
 						name="postType"
 						label="Материал тура *"
 						items={radioItems.post}
-						bind:value={$form.postType}
+						bind:value={postRadio}
 						errors={$errors.postType}
 						class="md:col-span-2"
 					/>
@@ -185,7 +185,7 @@
 					name="signPresence"
 					label="Опознавательный столб (знак) *"
 					items={radioItems.presence}
-					bind:value={$form.signPresence}
+					bind:value={signPresenceRadio}
 					errors={$errors.signPresence}
 				/>
 
@@ -193,28 +193,28 @@
 					name="monolith1Integrity"
 					label="Монолит I *"
 					items={radioItems.integrity}
-					bind:value={$form.monolith1Integrity}
+					bind:value={monolith1IntegrityRadio}
 					errors={$errors.monolith1Integrity}
 				/>
 				<RadioGroup
 					name="monolith2Openness"
 					label="Монолит II *"
 					items={radioItems.openness}
-					bind:value={$form.monolith2Openness}
+					bind:value={monolith2OpennessRadio}
 					errors={$errors.monolith2Openness}
 				/>
 				<RadioGroup
 					name="monoliths3And4Openness"
 					label="Монолиты III и IV *"
 					items={radioItems.openness}
-					bind:value={$form.monoliths3And4Openness}
+					bind:value={monoliths3And4OpennessRadio}
 					errors={$errors.monoliths3And4Openness}
 				/>
 				<RadioGroup
 					name="outerSignIntegrity"
 					label="Наружный знак *"
 					items={radioItems.integrity}
-					bind:value={$form.outerSignIntegrity}
+					bind:value={outerSignIntegrityRadio}
 					errors={$errors.outerSignIntegrity}
 				/>
 
@@ -222,36 +222,36 @@
 					name="orp1Integrity"
 					label="ОРП I *"
 					items={radioItems.integrity}
-					bind:value={$form.orp1Integrity}
+					bind:value={orp1IntegrityRadio}
 					errors={$errors.orp1Integrity}
 				/>
 				<RadioGroup
 					name="orp2Integrity"
 					label="ОРП II *"
 					items={radioItems.integrity}
-					bind:value={$form.orp2Integrity}
+					bind:value={orp2IntegrityRadio}
 					errors={$errors.orp2Integrity}
 				/>
 				<RadioGroup
 					name="trenchReadability"
 					label="Окопка *"
 					items={radioItems.readability}
-					bind:value={$form.trenchReadability}
+					bind:value={trenchReadabilityRadio}
 					errors={$errors.trenchReadability}
 				/>
 				<hr class="md:col-span-2" />
 				<TextInput
 					type="text"
-					name="upperMarkAboveGroundHeight"
+					name="upperMarkBelowGroundHeight"
 					label="Высота верхней марки (в метрах) *"
-					value={String($form.upperMarkAboveGroundHeight)}
-					errors={$errors.upperMarkAboveGroundHeight}
+					value={String($form.upperMarkBelowGroundHeight)}
+					errors={$errors.upperMarkBelowGroundHeight}
 				/>
 				<RadioGroup
 					name="satelliteObservability"
 					label="Спутниковые наблюдения на пункте *"
 					items={radioItems.satelliteObservability}
-					bind:value={$form.satelliteObservability}
+					bind:value={satelliteObservabilityRadio}
 					errors={$errors.satelliteObservability}
 				/>
 				<hr class="md:col-span-2" />
@@ -330,9 +330,7 @@
 		<!-- {#if record.authUserId === data.user?.userId}
 			<a href="/{record.id}" role="button">Редактировать</a>
 		{/if} -->
-		<form action="/{survey.id}/?/createDocx" method="POST">
-			<button class="btn variant-filled-secondary" type="submit">Скачать .docx</button>
-		</form>
+		<a href="/{survey.id}/createDocx" class="btn variant-filled-secondary">Скачать .docx</a>
 		<hr />
 	</article>
 {/each}

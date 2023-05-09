@@ -77,7 +77,7 @@ export const surveySchema = z.object({
 	orp1Integrity: z.string().min(1).max(200).trim(),
 	orp2Integrity: z.string().min(1).max(200).trim(),
 	trenchReadability: z.string().min(1).max(200).trim(),
-	upperMarkAboveGroundHeight: z.number(),
+	upperMarkBelowGroundHeight: z.number(),
 	satelliteObservability: z.string().min(1).max(200).trim(),
 	extraNotes: z.string().max(1000).trim(),
 	createdBy: z.string().min(1).max(200).trim(),

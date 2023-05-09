@@ -12,7 +12,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"prisma": {
-		"seed": "node --experimental-specifier-resolution=node --loader ts-node/esm seed.ts"
+		"seed": "node --experimental-specifier-resolution=node --loader ts-node/esm ./prisma/seed.ts"
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^3.1.3",

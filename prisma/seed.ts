@@ -20,14 +20,14 @@ async function main() {
 	// 		},
 	// 	},
 	// });
-	const federalDistrictsCsv = fs.readFileSync('./seed/federalDistricts.csv', 'utf8');
+	const federalDistrictsCsv = fs.readFileSync('./prisma/seed/federalDistricts.csv', 'utf8');
 	const federalDistricts = parse(federalDistrictsCsv, {
 		columns: true,
 		skip_empty_lines: true,
 		cast: true,
 	});
 
-	const federalSubjectsCsv = fs.readFileSync('./seed/federalSubjects.csv', 'utf8');
+	const federalSubjectsCsv = fs.readFileSync('./prisma/seed/federalSubjects.csv', 'utf8');
 	const federalSubjects = parse(federalSubjectsCsv, {
 		columns: true,
 		skip_empty_lines: true,

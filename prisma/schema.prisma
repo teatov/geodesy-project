@@ -71,7 +71,7 @@ model Survey {
   signType    SignType
   signHeight  Float
   centerType  String?
-  altitude    Int?
+  altitude    Float?
   trapezes    String?
 
   signPresence PresenceState
@@ -92,7 +92,7 @@ model Survey {
   exteriorPhotoId   String
   extraPhotos       Photo[] @relation("ExtraPhotos")
 
-  upperMarkAboveGroundHeight Float
+  upperMarkBelowGroundHeight Float
 
   satelliteObservability      ObservabilityState
 

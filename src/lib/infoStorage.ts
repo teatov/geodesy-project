@@ -31,11 +31,11 @@ export const radioItems = {
 
 	signMateial: [
 		{
-			value: 'PYRAMID_WOOD',
+			value: 'WOOD',
 			label: 'Деревянный',
 		},
 		{
-			value: 'PYRAMID_METAL',
+			value: 'METAL',
 			label: 'Металлический',
 		},
 	],

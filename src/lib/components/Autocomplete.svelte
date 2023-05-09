@@ -20,6 +20,9 @@
 			<InfoButton {modal} />
 		{/if}
 	</div>
+	{#if errors}
+		<small class="text-error-500">{errors}</small>
+	{/if}
 
 	<div class="card max-h-48 w-full overflow-y-auto p-4">
 		<Autocomplete
@@ -30,7 +33,4 @@
 			}}
 		/>
 	</div>
-	{#if errors}
-		<small class="text-error-500">{errors}</small>
-	{/if}
 </label>
