@@ -6,6 +6,8 @@ import { Prisma } from '@prisma/client';
 import { signupSchema } from '$lib/zod/schema';
 
 export const load: PageServerLoad = async ({ locals }) => {
+	throw redirect(302, '/');
+
 	const session = await locals.auth.validate();
 	if (session) {
 		throw redirect(302, '/');

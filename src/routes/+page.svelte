@@ -1,336 +1,70 @@
 <script lang="ts">
-	import TextArea from '$lib/components/TextArea.svelte';
-	import TextInput from '$lib/components/TextInput.svelte';
-	import RadioGroup from '$lib/components/RadioGroup.svelte';
-	import Autocomplete from '$lib/components/Autocomplete.svelte';
-	import type { PageData } from './$types';
-	import type { ModalSettings } from '@skeletonlabs/skeleton';
-	import { superForm } from 'sveltekit-superforms/client';
-	import { radioItems } from '$lib/infoStorage';
-	import { modals } from '$lib/modalStorage';
-	import schemaImage from '$lib/images/Fig.jpg';
-	import schemaImage1 from '$lib/images/punkt_draw.jpg';
-
-	export let data: PageData;
-
-	const { federalSubjects } = data;
-
-	$: ({ surveys } = data);
-
-	const { form, errors, enhance, capture, restore } = superForm(data.form, {
-		resetForm: false,
-	});
-
-	export const snapshot = { capture, restore };
-
-	export let parent: any;
-
-	let federalDistrictInputValue = '';
-
-	let signMainTypeRadio: string,
-		signalRadio: string,
-		signMateialRadio: string,
-		signSidesRadio: string,
-		postRadio: string,
-		signPresenceRadio: string,
-		monolith1IntegrityRadio: string,
-		monolith2OpennessRadio: string,
-		monoliths3And4OpennessRadio: string,
-		outerSignIntegrityRadio: string,
-		orp1IntegrityRadio: string,
-		orp2IntegrityRadio: string,
-		trenchReadabilityRadio: string,
-		satelliteObservabilityRadio: string;
+	import backgroundImage from '$lib/images/back.jpg';
 </script>
 
 <svelte:head>
-	<title>Заполнение карточки обследования</title>
-	<meta name="description" content="Заполнение карточки обследования геодезического пункта" />
+	<title>Сервис для заполнения карточек обследования пунктов ГГС</title>
+	<meta name="description" content="Сервис для заполнения карточек обследования пунктов ГГС" />
 </svelte:head>
 
-{#if data.user}
-	<div>
-		<form action="?/createRecord" method="POST" use:enhance>
-			<h3 class="my-5 text-center">Карточка обследования пункта ГГС</h3>
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<TextInput
-					type="text"
-					name="workBy"
-					label="Кем выполнены работы по обследованию *"
-					value={$form.workBy}
-					errors={$errors.workBy}
-				/>
-				<TextInput
-					type="date"
-					name="surveyDate"
-					label="Дата производства работ *"
-					value={$form.surveyDate ? $form.surveyDate.toISOString().split('T')[0] : ''}
-					errors={$errors.surveyDate}
-				/>
-				<hr class="md:col-span-2" />
-				<Autocomplete
-					name="federalSubject"
-					bind:value={federalDistrictInputValue}
-					options={federalSubjects}
-					label="Субъект Российской Федерации *"
-					class="md:col-span-2"
-					errors={$errors.federalSubject}
-				/>
-				<TextInput
-					type="text"
-					name="markerIndex"
-					label="№ по каталогу/индекс пункта"
-					value={$form.markerIndex}
-					errors={$errors.markerIndex}
-				/>
-				<TextInput
-					type="text"
-					name="markerName"
-					label="Название пункта, класс, № марки *"
-					value={$form.markerName}
-					errors={$errors.markerName}
-				/>
-				<TextInput
-					type="text"
-					name="placingYear"
-					label="Год закладки"
-					value={String($form.placingYear)}
-					errors={$errors.placingYear}
-				/>
-				<TextInput
-					type="text"
-					name="signHeight"
-					label="Высота знака (в метрах) *"
-					value={String($form.signHeight)}
-					errors={$errors.signHeight}
-				/>
-				<hr class="md:col-span-2" />
-				<TextInput
-					type="text"
-					name="centerType"
-					label="Тип центра"
-					value={$form.centerType}
-					errors={$errors.centerType}
-				/>
-				<TextInput
-					type="text"
-					name="altitude"
-					label="Высота над уровнем моря (в метрах)"
-					value={String($form.altitude)}
-					errors={$errors.altitude}
-				/>
-				<TextInput
-					type="text"
-					name="trapezes"
-					label="Трапеции"
-					value={$form.trapezes}
-					errors={$errors.trapezes}
-				/>
-				<TextInput
-					type="text"
-					name="coordinates"
-					label="Координаты *"
-					value={$form.coordinates}
-					errors={$errors.coordinates}
-					modal={modals.coordinates}
-				/>
-				<hr class="md:col-span-2" />
-				<RadioGroup
-					name="signMainType"
-					label="Тип знака *"
-					items={radioItems.signMainType}
-					bind:value={signMainTypeRadio}
-					errors={$errors.signMainType}
-					class="md:col-span-2"
-					modal={modals.signType}
-				/>
-				{#if signMainTypeRadio === 'SIGNAL'}
-					<RadioGroup
-						name="signalType"
-						label="Тип сигнала *"
-						items={radioItems.signal}
-						bind:value={signalRadio}
-						errors={$errors.signalType}
-						class="md:col-span-2"
-					/>
-				{/if}
-				{#if ['PYRAMID', 'STAND'].includes(signMainTypeRadio)}
-					<RadioGroup
-						name="signMaterial"
-						label={`Материал ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
-						items={radioItems.signMateial}
-						bind:value={signMateialRadio}
-						errors={$errors.signMaterial}
-					/>
-					<RadioGroup
-						name="signSides"
-						label={`Форма ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
-						items={radioItems.signSides}
-						bind:value={signSidesRadio}
-						errors={$errors.signSides}
-					/>
-				{/if}
-				{#if signMainTypeRadio == 'POST'}
-					<RadioGroup
-						name="postType"
-						label="Материал тура *"
-						items={radioItems.post}
-						bind:value={postRadio}
-						errors={$errors.postType}
-						class="md:col-span-2"
-					/>
-				{/if}
-				<hr class="md:col-span-2" />
-				<RadioGroup
-					name="signPresence"
-					label="Опознавательный столб (знак) *"
-					items={radioItems.presence}
-					bind:value={signPresenceRadio}
-					errors={$errors.signPresence}
-				/>
-
-				<RadioGroup
-					name="monolith1Integrity"
-					label="Монолит I *"
-					items={radioItems.integrity}
-					bind:value={monolith1IntegrityRadio}
-					errors={$errors.monolith1Integrity}
-				/>
-				<RadioGroup
-					name="monolith2Openness"
-					label="Монолит II *"
-					items={radioItems.openness}
-					bind:value={monolith2OpennessRadio}
-					errors={$errors.monolith2Openness}
-				/>
-				<RadioGroup
-					name="monoliths3And4Openness"
-					label="Монолиты III и IV *"
-					items={radioItems.openness}
-					bind:value={monoliths3And4OpennessRadio}
-					errors={$errors.monoliths3And4Openness}
-				/>
-				<RadioGroup
-					name="outerSignIntegrity"
-					label="Наружный знак *"
-					items={radioItems.integrity}
-					bind:value={outerSignIntegrityRadio}
-					errors={$errors.outerSignIntegrity}
-				/>
-
-				<RadioGroup
-					name="orp1Integrity"
-					label="ОРП I *"
-					items={radioItems.integrity}
-					bind:value={orp1IntegrityRadio}
-					errors={$errors.orp1Integrity}
-				/>
-				<RadioGroup
-					name="orp2Integrity"
-					label="ОРП II *"
-					items={radioItems.integrity}
-					bind:value={orp2IntegrityRadio}
-					errors={$errors.orp2Integrity}
-				/>
-				<RadioGroup
-					name="trenchReadability"
-					label="Окопка *"
-					items={radioItems.readability}
-					bind:value={trenchReadabilityRadio}
-					errors={$errors.trenchReadability}
-				/>
-				<hr class="md:col-span-2" />
-				<TextInput
-					type="text"
-					name="upperMarkBelowGroundHeight"
-					label="Высота верхней марки (в метрах) *"
-					value={String($form.upperMarkBelowGroundHeight)}
-					errors={$errors.upperMarkBelowGroundHeight}
-				/>
-				<RadioGroup
-					name="satelliteObservability"
-					label="Спутниковые наблюдения на пункте *"
-					items={radioItems.satelliteObservability}
-					bind:value={satelliteObservabilityRadio}
-					errors={$errors.satelliteObservability}
-				/>
-				<hr class="md:col-span-2" />
-				<TextInput
-					type="file"
-					name="exteriorPhoto"
-					label="Фотография внешнего оформления (в перспективе) *"
-					value={$form.exteriorPhoto}
-					errors={$errors.exteriorPhoto}
-					accept="image/*"
-				/>
-				<TextInput
-					type="file"
-					name="centerMarkPhoto"
-					label="Фотография марки центра вблизи *"
-					value={$form.centerMarkPhoto}
-					errors={$errors.centerMarkPhoto}
-					accept="image/*"
-					modal={modals.centerMarkPhoto}
-				/>
-				<div class="md:col-span-2">
-					<TextInput
-						type="file"
-						name="extraPhotos"
-						label="Дополнительные фотографии"
-						value={$form.extraPhotos}
-						errors={$errors.extraPhotos}
-						accept="image/*"
-						multiple
-					/>
-				</div>
-				<hr class="md:col-span-2" />
-				<div class="md:col-span-2">
-					<TextArea
-						type="text"
-						name="extraNotes"
-						label="Примечания"
-						value={$form.extraNotes}
-						errors={$errors.extraNotes}
-					/>
-				</div>
-
-				<div class="md:col-span-2">
-					<TextInput
-						type="text"
-						name="createdBy"
-						label="Составил(а) *"
-						value={String($form.createdBy)}
-						errors={$errors.createdBy}
-					/>
-				</div>
-			</div>
-			<hr class="md:col-span-2" />
-			{#if $errors._errors}
-				<small class="text-error-500">{$errors._errors}</small>
-			{/if}
-
-			<div class="my-12 flex justify-center">
-				<button class="btn variant-filled-primary" type="submit">Создать</button>
-			</div>
-			<hr />
-		</form>
+<div
+	class="aspect-[8/3] w-screen bg-cover bg-center p-4"
+	style="background-image: url({backgroundImage})"
+>
+	<h1 class="font-bold text-white">Государственная геодезическая сеть</h1>
+	<div class="flex h-full items-end justify-center">
+		<a href="/survey" class="btn variant-filled-surface h-min" type="submit"
+			>Перейти к заполнению карточки обследования</a
+		>
 	</div>
-{/if}
-
-{#each surveys as survey}
-	<article>
-		<strong>{survey.markerName}</strong>
+</div>
+<main class="container mx-auto mt-0 space-y-10 px-4 py-10 md:max-w-5xl">
+	<div>
 		<p>
-			{survey.latitude}
-			{survey.longitude}
+			Государственная геодезическая сеть (ГГС) закрепляет на земной поверхности различные реализации
+			государственной и местной систем координат. Системы координат нужны для ориентирования в
+			пространстве, создания карт и планов, геоинформационных систем, навигации и решения множества
+			других задач. Каждый пункт ГГС имеет специальную метку-марку (геодезический центр), координаты
+			центра которой определены с высокой точностью. Задача геодезического пункта - зафиксировать
+			эти координаты относительно земной поверхности и обеспечить их беспрепятственное использование
+			при выполнении специальных (геодезических) работ с целью определения пространственного
+			положения стационарных и/или движущихся объектов, находящихся в пределах нашей страны.
 		</p>
 		<p>
-			{survey.createdBy}
+			Значительная часть пунктов ГГС была построена в XX веке и служила для реализации нескольких
+			видов геодезических измерений - угловых (при помощи специальных приборов-теодолитов измерялись
+			горизонтальные и вертикальные углы между направлениями на геодезические пункты), линейных (при
+			помощи свето- и радиодальномеров измерялись расстояния между пунктами) и высотных (при помощи
+			специальных приборов - нивелиров измерялись разности высот между пунктами). Для лучшей
+			видимости многие геодезические пункты размещаются на возвышенностях - вершинах гор, холмов,
+			зданиях и оснащались наружными знаками (сигналами), построенными из дерева, железа,
+			железобетона, каменными или кирпичными турами. Для наблюдений с больших расстояний на вершине
+			установлен визирный цилиндр. Инструмент наблюдателя устанавливается на штативе (треноге) или
+			на специально изготовленном из дерева/металла/камня столике над геодезическим центром пункта.
+			Вершина сигнала также центрируется над геодезическим центром. Для большей сохранности
+			геодезический центр (монолит) - более или менее сложная конструкция из металла и бетона
+			надежно закрепленная в грунте и несущий в своей верхней части закоординированную марку, может
+			состоять из нескольких частей, соосно установленных одна над другой. Если верхняя часть центра
+			будет утрачена, нижележащий центр пункта все равно может использоваться для наблюдений. Часто
+			верхней геодезический центр засыпается грунтом или закладывается камнями для большей его
+			сохранности. Рядом с геодезическим центром к северу от него устанавливается специальный
+			бетонный столбик с табличкой обращенной к центру. Ряд геодезических пунктов имеют в своем
+			составе пару вспомогательных (ориентирных) пунктов (ОП), расположенных на расстояниях 250-1000
+			метров. Для лучшего отыскания центра пункта его окапывают квадратной канавкой глубиной около
+			0,5 м (окопка) и хорошо сохраняющейся на местности в течение длительного времени.
 		</p>
-		<!-- {#if record.authUserId === data.user?.userId}
-			<a href="/{record.id}" role="button">Редактировать</a>
-		{/if} -->
-		<a href="/{survey.id}/createDocx" class="btn variant-filled-secondary">Скачать .docx</a>
-		<hr />
-	</article>
-{/each}
+		<p>
+			Задача обследования геодезических пунктов крайне важна для поддержания целостности
+			координатной основы Российской Федерации. Многие пункты находятся в труднодоступных местах,
+			ряд пунктов наоборот расположены в зоне интенсивной хозяйственной деятельности. И в том и в
+			другом случае часть пунктов частично или полностью утрачивается или перестает быть пригодной
+			для выполнения геодезических работ. Специалистам необходимо иметь достаточно полную и
+			актуальную информацию о каждом пункте ГГС для того, чтобы иметь возможность использовать его в
+			своей работе. Учитывая, что всего на территории России расположено несколько сотен тысяч (!)
+			геодезических пунктов и их роль в решении различных производственных, военных и научных задач
+			чрезвычайно высока, проблема скорейшего обследования ГГС имеет важнейшее государственное
+			значение!
+		</p>
+		<p>Внесите свой вклад в решение этой задачи!</p>
+	</div>
+</main>

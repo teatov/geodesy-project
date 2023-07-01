@@ -162,19 +162,11 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 		},
 		additionalJsContext: {
 			centerMarkPhoto: () => {
-				const data = fs.readFileSync('./static/favicon.png');
+				const data = fs.readFileSync(`./static/${survey.centerMarkPhoto}`);
 				return { width: 3, height: 3, data, extension: '.png' };
 			},
 			exteriorPhoto: () => {
-				const data = fs.readFileSync('./static/favicon.png');
-				return { width: 3, height: 3, data, extension: '.png' };
-			},
-			extraPhoto1: () => {
-				const data = fs.readFileSync('./static/favicon.png');
-				return { width: 3, height: 3, data, extension: '.png' };
-			},
-			extraPhoto2: () => {
-				const data = fs.readFileSync('./static/favicon.png');
+				const data = fs.readFileSync(`./static/${survey.exteriorPhoto}`);
 				return { width: 3, height: 3, data, extension: '.png' };
 			},
 		},

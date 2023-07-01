@@ -53,7 +53,7 @@ model AuthKey {
 }
 
 model Survey {
-  id        String   @id @default(uuid())
+  id String @id @default(uuid())
 
   surveyDate DateTime
 
@@ -86,21 +86,18 @@ model Survey {
 
   trenchReadability ReadabilityState
 
-  centerMarkPhoto   Photo   @relation("CenterMarkPhoto", fields: [centerMarkPhotoId], references: [id])
-  centerMarkPhotoId String
-  exteriorPhoto     Photo   @relation("ExteriorPhoto", fields: [exteriorPhotoId], references: [id])
-  exteriorPhotoId   String
-  extraPhotos       Photo[] @relation("ExtraPhotos")
+  centerMarkPhoto String
+  exteriorPhoto   String
 
   upperMarkBelowGroundHeight Float
 
-  satelliteObservability      ObservabilityState
+  satelliteObservability ObservabilityState
 
   extraNotes String?
 
   createdBy  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   approvedBy String?
   approvedAt DateTime?
 }
@@ -151,16 +148,6 @@ enum ObservabilityState {
   OBSERVABLE
   CONDITIONALLY_OBSERVABLE
   UNOBSERVABLE
-}
-
-model Photo {
-  id               String   @id @default(uuid())
-  fileName         String
-  centerMarkSurver Survey[] @relation("CenterMarkPhoto")
-  exteriorSurvey   Survey[] @relation("ExteriorPhoto")
-  extraSurvey      Survey?  @relation("ExtraPhotos", fields: [extraSurveyId], references: [id])
-  extraSurveyId    String?
-  distance         Float?
 }
 
 model FederalDistrict {

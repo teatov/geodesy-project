@@ -10,6 +10,11 @@
 	$: ({ survey } = data);
 </script>
 
+<svelte:head>
+	<title>Просмотр карточки обследования</title>
+	<meta name="description" content="Просмотр карточки обследования" />
+</svelte:head>
+
 <a href="/" role="button">Назад</a>
 
 <!-- <form class="w-80" action="?/updateRecord" method="POST" use:enhance>

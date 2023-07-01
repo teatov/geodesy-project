@@ -8,6 +8,11 @@
 	const { form, errors, enhance } = superForm(data.form);
 </script>
 
+<svelte:head>
+	<title>Регистрация</title>
+	<meta name="description" content="Регистрация" />
+</svelte:head>
+
 <hgroup>
 	<h2 class="flex justify-center space-x-4">Регистрация</h2>
 </hgroup>

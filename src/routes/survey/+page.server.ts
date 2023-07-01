@@ -1,12 +1,26 @@
-import type { PageServerLoad, Actions } from './$types';
+import type { PageServerLoad, Actions } from '../$types';
 import prisma from '$lib/server/prisma';
 import { SignType } from '@prisma/client';
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate, setError } from 'sveltekit-superforms/server';
 import { setErrorMap, surveySchema } from '$lib/zod/schema';
-import type { AutocompleteOption } from '@skeletonlabs/skeleton';
+import { writeFileSync } from 'fs';
 import Coordinates from 'coordinate-parser';
 import { Prisma } from '@prisma/client';
+import type { AutocompleteOption } from '@skeletonlabs/skeleton';
+
+export const load: PageServerLoad = async () => {
+	const federalSubjectsRaw = await prisma.federalSubject.findMany();
+
+	const federalSubjects: AutocompleteOption[] = federalSubjectsRaw.map((subject) => ({
+		label: subject.name,
+		value: subject.code,
+	}));
+
+	const form = await superValidate(surveySchema);
+
+	return { form, federalSubjects };
+};
 
 function getSignType(
 	signMainType: string,
@@ -42,33 +56,15 @@ function getSignType(
 
 setErrorMap();
 
-export const load: PageServerLoad = async () => {
-	const surveys = await prisma.survey.findMany({
-		orderBy: {
-			createdAt: 'desc',
-		},
-	});
-
-	const federalSubjectsRaw = await prisma.federalSubject.findMany();
-
-	const federalSubjects: AutocompleteOption[] = federalSubjectsRaw.map((subject) => ({
-		label: subject.name,
-		value: subject.code,
-	}));
-
-	const form = await superValidate(surveySchema);
-
-	return { form, surveys, federalSubjects };
-};
-
 export const actions: Actions = {
 	createRecord: async ({ request, locals }) => {
-		const { user, session } = await locals.auth.validateUser();
-		if (!(user && session)) {
-			throw redirect(302, '/');
-		}
+		// const { user, session } = await locals.auth.validateUser();
+		// if (!(user && session)) {
+		// 	throw redirect(302, '/');
+		// }
 
-		const form = await superValidate(request, surveySchema);
+		const formData = Object.fromEntries(await request.formData());
+		const form = await superValidate(formData, surveySchema);
 
 		console.log(form);
 		const data = form.data;
@@ -86,11 +82,23 @@ export const actions: Actions = {
 				data.postType
 			);
 
+			console.log('TEST 1');
+
 			if (!form.valid) {
+				console.log('TEST 1.5');
 				return fail(400, { form });
 			}
 
 			const coordinates = new Coordinates(data.coordinates);
+
+			console.log('TEST 1.2');
+
+			const { centerMarkPhoto, exteriorPhoto } = formData as {
+				centerMarkPhoto: File;
+				exteriorPhoto: File;
+			};
+
+			console.log('TEST 2');
 
 			const newSurvey = {
 				surveyDate: data.surveyDate,
@@ -118,34 +126,38 @@ export const actions: Actions = {
 				monolith2Openness: data.monolith2Openness,
 				monoliths3And4Openness: data.monoliths3And4Openness,
 				trenchReadability: data.trenchReadability,
-				centerMarkPhoto: {
-					connect: {
-						id: '0',
-					},
-				},
-				exteriorPhoto: {
-					connect: {
-						id: '0',
-					},
-				},
-				extraPhotos: {
-					connect: {
-						id: '0',
-					},
-				},
+				centerMarkPhoto: centerMarkPhoto.name,
+				exteriorPhoto: exteriorPhoto.name,
 				upperMarkBelowGroundHeight: data.upperMarkBelowGroundHeight,
 				satelliteObservability: data.satelliteObservability,
 				extraNotes: data.extraNotes,
 				createdBy: data.createdBy,
 			};
 
+			console.log('TEST 3');
+
 			await prisma.survey.create({
 				data: newSurvey,
 			});
+
+			console.log('TEST 4');
+
+			// writeFileSync(
+			// 	`static/${centerMarkPhoto.name}`,
+			// 	Buffer.from(await centerMarkPhoto.arrayBuffer())
+			// );
+			// writeFileSync(`static/${exteriorPhoto.name}`, Buffer.from(await exteriorPhoto.arrayBuffer()));
 		} catch (error) {
 			console.error(error);
 
-			let message = 'При создании записи возникла ошибка';
+			console.log('TEST 11111');
+
+			let message = 'При создании возникла ошибка';
+
+			if (error instanceof Error) {
+				message = error.message;
+				setError(form, 'federalSubject', message);
+			}
 
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
@@ -157,33 +169,33 @@ export const actions: Actions = {
 			switch (data.signMainType) {
 				case 'SIGNAL':
 					if (!data.signalType) {
-						message = 'Введите существующий субъект РФ';
+						message = 'Выберите тип знака';
 						setError(form, 'signalType', message);
 					}
 					break;
 				case 'PYRAMID':
 					if (!data.signMaterial) {
-						message = 'Введите существующий субъект РФ';
+						message = 'Выберите материал пирамиды';
 						setError(form, 'signMaterial', message);
 					}
 					if (!data.signSides) {
-						message = 'Введите существующий субъект РФ';
+						message = 'Выберите количество сторон пирамиды';
 						setError(form, 'signSides', message);
 					}
 					break;
 				case 'STAND':
 					if (!data.signMaterial) {
-						message = 'Введите существующий субъект РФ';
+						message = 'Выберите материал штатива';
 						setError(form, 'signMaterial', message);
 					}
 					if (!data.signSides) {
-						message = 'Введите существующий субъект РФ';
+						message = 'Выберите количество сторон штатива';
 						setError(form, 'signSides', message);
 					}
 					break;
 				case 'POST':
 					if (!data.postType) {
-						message = 'Введите существующий субъект РФ';
+						message = 'Выберите тип тура';
 						setError(form, 'postType', message);
 					}
 					break;
@@ -192,9 +204,13 @@ export const actions: Actions = {
 					break;
 			}
 
-			return setError(form, null, 'При создании записи возникла ошибка');
+			console.log('TEST 55555');
+
+			return setError(form, null, message);
 		}
 
-		return { status: 201 };
+		console.log('TEST 5');
+
+		throw redirect(302, '/');
 	},
 };
