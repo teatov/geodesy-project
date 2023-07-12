@@ -18,8 +18,6 @@
 
 	export const snapshot = { capture, restore };
 
-	export let parent: any;
-
 	let federalDistrictInputValue = '';
 
 	let signMainTypeRadio: string,
@@ -51,25 +49,34 @@
 				<TextInput
 					type="text"
 					name="workBy"
-					label="Кем выполнены работы по обследованию *"
+					label="Кем выполнены работы по обследованию"
 					value={$form.workBy}
 					errors={$errors.workBy}
+					required
 				/>
 				<TextInput
 					type="date"
 					name="surveyDate"
-					label="Дата производства работ *"
-					value={$form.surveyDate ? $form.surveyDate.toLocaleDateString() : ''}
+					label="Дата производства работ"
+					value={$form.surveyDate
+						? [
+								$form.surveyDate.getFullYear(),
+								String($form.surveyDate.getMonth() + 1).padStart(2, '0'),
+								String($form.surveyDate.getDate()).padStart(2, '0'),
+						  ].join('-')
+						: ''}
 					errors={$errors.surveyDate}
+					required
 				/>
 				<hr class="md:col-span-2" />
 				<Autocomplete
 					name="federalSubject"
-					bind:value={federalDistrictInputValue}
+					bind:value={$form.federalSubject}
 					options={federalSubjects}
-					label="Субъект Российской Федерации *"
+					label="Субъект Российской Федерации"
 					class="md:col-span-2"
 					errors={$errors.federalSubject}
+					required
 				/>
 				<TextInput
 					type="text"
@@ -81,23 +88,26 @@
 				<TextInput
 					type="text"
 					name="markerName"
-					label="Название пункта, класс, № марки *"
+					label="Название пункта, класс, № марки"
 					value={$form.markerName}
 					errors={$errors.markerName}
+					required
 				/>
 				<TextInput
-					type="text"
+					type="number"
 					name="placingYear"
 					label="Год закладки"
-					value={String($form.placingYear)}
+					value={$form.placingYear || undefined}
 					errors={$errors.placingYear}
 				/>
 				<TextInput
-					type="text"
+					type="number"
 					name="signHeight"
-					label="Высота знака (в метрах) *"
-					value={String($form.signHeight)}
+					label="Высота знака (в метрах)"
+					value={$form.signHeight || undefined}
 					errors={$errors.signHeight}
+					required
+					step="any"
 				/>
 				<hr class="md:col-span-2" />
 				<TextInput
@@ -108,11 +118,12 @@
 					errors={$errors.centerType}
 				/>
 				<TextInput
-					type="text"
+					type="number"
 					name="altitude"
 					label="Высота над уровнем моря (в метрах)"
-					value={String($form.altitude)}
+					value={$form.altitude || undefined}
 					errors={$errors.altitude}
+					step="any"
 				/>
 				<TextInput
 					type="text"
@@ -124,146 +135,163 @@
 				<TextInput
 					type="text"
 					name="coordinates"
-					label="Координаты *"
+					label="Координаты"
 					value={$form.coordinates}
 					errors={$errors.coordinates}
 					modal={modals.coordinates}
+					required
 				/>
 				<hr class="md:col-span-2" />
 				<RadioGroup
 					name="signMainType"
-					label="Тип знака *"
+					label="Тип знака"
 					items={radioItems.signMainType}
 					bind:value={signMainTypeRadio}
 					errors={$errors.signMainType}
 					class="md:col-span-2"
 					modal={modals.signType}
+					required
 				/>
 				{#if signMainTypeRadio === 'SIGNAL'}
 					<RadioGroup
 						name="signalType"
-						label="Тип сигнала *"
+						label="Тип сигнала"
 						items={radioItems.signal}
 						bind:value={signalRadio}
 						errors={$errors.signalType}
 						class="md:col-span-2"
+						required
 					/>
 				{/if}
 				{#if ['PYRAMID', 'STAND'].includes(signMainTypeRadio)}
 					<RadioGroup
 						name="signMaterial"
-						label={`Материал ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
+						label={`Материал ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'}`}
 						items={radioItems.signMateial}
 						bind:value={signMateialRadio}
 						errors={$errors.signMaterial}
+						required
 					/>
 					<RadioGroup
 						name="signSides"
-						label={`Форма ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'} *`}
+						label={`Форма ${signMainTypeRadio === 'PYRAMID' ? 'пирамиды' : 'штатива'}`}
 						items={radioItems.signSides}
 						bind:value={signSidesRadio}
 						errors={$errors.signSides}
+						required
 					/>
 				{/if}
 				{#if signMainTypeRadio == 'POST'}
 					<RadioGroup
 						name="postType"
-						label="Материал тура *"
+						label="Материал тура"
 						items={radioItems.post}
 						bind:value={postRadio}
 						errors={$errors.postType}
 						class="md:col-span-2"
+						required
 					/>
 				{/if}
 				<hr class="md:col-span-2" />
 				<RadioGroup
 					name="signPresence"
-					label="Опознавательный столб (знак) *"
+					label="Опознавательный столб (знак)"
 					items={radioItems.presence}
 					bind:value={signPresenceRadio}
 					errors={$errors.signPresence}
+					required
 				/>
 
 				<RadioGroup
 					name="monolith1Integrity"
-					label="Монолит I *"
+					label="Монолит I"
 					items={radioItems.integrity}
 					bind:value={monolith1IntegrityRadio}
 					errors={$errors.monolith1Integrity}
+					required
 				/>
 				<RadioGroup
 					name="monolith2Openness"
-					label="Монолит II *"
+					label="Монолит II"
 					items={radioItems.openness}
 					bind:value={monolith2OpennessRadio}
 					errors={$errors.monolith2Openness}
+					required
 				/>
 				<RadioGroup
 					name="monoliths3And4Openness"
-					label="Монолиты III и IV *"
+					label="Монолиты III и IV"
 					items={radioItems.openness}
 					bind:value={monoliths3And4OpennessRadio}
 					errors={$errors.monoliths3And4Openness}
+					required
 				/>
 				<RadioGroup
 					name="outerSignIntegrity"
-					label="Наружный знак *"
+					label="Наружный знак"
 					items={radioItems.integrity}
 					bind:value={outerSignIntegrityRadio}
 					errors={$errors.outerSignIntegrity}
+					required
 				/>
 
 				<RadioGroup
 					name="orp1Integrity"
-					label="ОРП I *"
+					label="ОРП I"
 					items={radioItems.integrity}
 					bind:value={orp1IntegrityRadio}
 					errors={$errors.orp1Integrity}
+					required
 				/>
 				<RadioGroup
 					name="orp2Integrity"
-					label="ОРП II *"
+					label="ОРП II"
 					items={radioItems.integrity}
 					bind:value={orp2IntegrityRadio}
 					errors={$errors.orp2Integrity}
+					required
 				/>
 				<RadioGroup
 					name="trenchReadability"
-					label="Окопка *"
+					label="Окопка"
 					items={radioItems.readability}
 					bind:value={trenchReadabilityRadio}
 					errors={$errors.trenchReadability}
+					required
 				/>
 				<hr class="md:col-span-2" />
 				<TextInput
-					type="text"
+					type="number"
 					name="upperMarkBelowGroundHeight"
-					label="Высота верхней марки (в метрах) *"
-					value={String($form.upperMarkBelowGroundHeight)}
+					label="Высота верхней марки (в метрах)"
+					value={$form.upperMarkBelowGroundHeight || undefined}
 					errors={$errors.upperMarkBelowGroundHeight}
+					required
+					step="any"
 				/>
 				<RadioGroup
 					name="satelliteObservability"
-					label="Спутниковые наблюдения на пункте *"
+					label="Спутниковые наблюдения на пункте"
 					items={radioItems.satelliteObservability}
 					bind:value={satelliteObservabilityRadio}
 					errors={$errors.satelliteObservability}
+					required
 				/>
 				<hr class="md:col-span-2" />
 				<TextInput
 					type="file"
 					name="exteriorPhoto"
-					label="Фотография внешнего оформления (в перспективе) *"
+					label="Фотография внешнего оформления (в перспективе)"
 					value=""
-					errors={undefined}
+					errors={$errors.exteriorPhoto}
 					accept="image/*"
 				/>
 				<TextInput
 					type="file"
 					name="centerMarkPhoto"
-					label="Фотография марки центра вблизи *"
+					label="Фотография марки центра вблизи"
 					value=""
-					errors={undefined}
+					errors={$errors.centerMarkPhoto}
 					accept="image/*"
 					modal={modals.centerMarkPhoto}
 				/>
@@ -282,9 +310,10 @@
 					<TextInput
 						type="text"
 						name="createdBy"
-						label="Составил(а) *"
-						value={String($form.createdBy)}
+						label="Составил(а)"
+						value={$form.createdBy}
 						errors={$errors.createdBy}
+						required
 					/>
 				</div>
 			</div>

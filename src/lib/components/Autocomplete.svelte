@@ -10,10 +10,13 @@
 	export let label: string | undefined = undefined;
 	export let modal: ModalSettings | undefined = undefined;
 	export let errors: string[] | undefined = undefined;
+	export let required: boolean | undefined = undefined;
+	export let maxHeight = 48;
 </script>
 
 <label for={name} {...$$restProps}>
 	{#if label}<span>{label}</span>{/if}
+	{#if required}<span class="text-error-500">*</span>{/if}
 	<div class="mb-2 flex gap-2">
 		<input class="input {errors ? 'input-error' : ''}" type="search" id={name} {name} bind:value />
 		{#if modal}
@@ -24,13 +27,14 @@
 		<small class="text-error-500">{errors}</small>
 	{/if}
 
-	<div class="card max-h-48 w-full overflow-y-auto p-4">
+	<div class="card max-h-{maxHeight} w-full overflow-y-auto p-4">
 		<Autocomplete
 			bind:input={value}
 			{options}
 			on:selection={(event) => {
 				value = event.detail.label;
 			}}
+			required={false}
 		/>
 	</div>
 </label>

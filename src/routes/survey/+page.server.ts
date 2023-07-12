@@ -1,6 +1,6 @@
-import type { PageServerLoad, Actions } from '../$types';
+import type { PageServerLoad, Actions } from './$types';
 import prisma from '$lib/server/prisma';
-import { SignType } from '@prisma/client';
+import { IntegrityState, ObservabilityState, OpennessState, PresenceState, ReadabilityState, SignType } from '@prisma/client';
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate, setError } from 'sveltekit-superforms/server';
 import { setErrorMap, surveySchema } from '$lib/zod/schema';
@@ -63,11 +63,28 @@ export const actions: Actions = {
 		// 	throw redirect(302, '/');
 		// }
 
-		const formData = Object.fromEntries(await request.formData());
+		const formData = await request.formData();
 		const form = await superValidate(formData, surveySchema);
 
+		console.log(formData);
 		console.log(form);
 		const data = form.data;
+
+		const centerMarkPhoto = formData.get('centerMarkPhoto') as File;
+		const exteriorPhoto = formData.get('exteriorPhoto') as File;
+
+		console.log(centerMarkPhoto);
+		console.log(exteriorPhoto);
+
+		if (!centerMarkPhoto.size) {
+			setError(form, 'centerMarkPhoto', 'Поле обязательно');
+		}
+
+		if (!exteriorPhoto.size) {
+			setError(form, 'exteriorPhoto', 'Поле обязательно');
+		}
+
+		let surveyId: string;
 
 		try {
 			const federalSubject = await prisma.federalSubject.findFirstOrThrow({
@@ -93,11 +110,6 @@ export const actions: Actions = {
 
 			console.log('TEST 1.2');
 
-			const { centerMarkPhoto, exteriorPhoto } = formData as {
-				centerMarkPhoto: File;
-				exteriorPhoto: File;
-			};
-
 			console.log('TEST 2');
 
 			const newSurvey = {
@@ -118,35 +130,41 @@ export const actions: Actions = {
 				centerType: data.centerType,
 				altitude: data.altitude,
 				trapezes: data.trapezes,
-				signPresence: data.signPresence,
-				monolith1Integrity: data.monolith1Integrity,
-				outerSignIntegrity: data.outerSignIntegrity,
-				orp1Integrity: data.orp1Integrity,
-				orp2Integrity: data.orp2Integrity,
-				monolith2Openness: data.monolith2Openness,
-				monoliths3And4Openness: data.monoliths3And4Openness,
-				trenchReadability: data.trenchReadability,
+				signPresence: data.signPresence as PresenceState,
+				monolith1Integrity: data.monolith1Integrity as IntegrityState,
+				outerSignIntegrity: data.outerSignIntegrity as IntegrityState,
+				orp1Integrity: data.orp1Integrity as IntegrityState,
+				orp2Integrity: data.orp2Integrity as IntegrityState,
+				monolith2Openness: data.monolith2Openness as OpennessState,
+				monoliths3And4Openness: data.monoliths3And4Openness as OpennessState,
+				trenchReadability: data.trenchReadability as ReadabilityState,
 				centerMarkPhoto: centerMarkPhoto.name,
 				exteriorPhoto: exteriorPhoto.name,
 				upperMarkBelowGroundHeight: data.upperMarkBelowGroundHeight,
-				satelliteObservability: data.satelliteObservability,
+				satelliteObservability: data.satelliteObservability as ObservabilityState,
 				extraNotes: data.extraNotes,
 				createdBy: data.createdBy,
 			};
 
 			console.log('TEST 3');
 
-			await prisma.survey.create({
+			const createdSurvey = await prisma.survey.create({
 				data: newSurvey,
 			});
 
 			console.log('TEST 4');
 
-			// writeFileSync(
-			// 	`static/${centerMarkPhoto.name}`,
-			// 	Buffer.from(await centerMarkPhoto.arrayBuffer())
-			// );
-			// writeFileSync(`static/${exteriorPhoto.name}`, Buffer.from(await exteriorPhoto.arrayBuffer()));
+			writeFileSync(
+				`static/surveyPhotos/${centerMarkPhoto.name}`,
+				Buffer.from(await centerMarkPhoto.arrayBuffer())
+			);
+
+			writeFileSync(
+				`static/surveyPhotos/${exteriorPhoto.name}`,
+				Buffer.from(await exteriorPhoto.arrayBuffer())
+			);
+
+			surveyId = createdSurvey.id;
 		} catch (error) {
 			console.error(error);
 
@@ -156,7 +174,7 @@ export const actions: Actions = {
 
 			if (error instanceof Error) {
 				message = error.message;
-				setError(form, 'federalSubject', message);
+				setError(form, null, message);
 			}
 
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -209,8 +227,6 @@ export const actions: Actions = {
 			return setError(form, null, message);
 		}
 
-		console.log('TEST 5');
-
-		throw redirect(302, '/');
+		throw redirect(302, `/${surveyId}`);
 	},
 };

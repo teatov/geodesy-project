@@ -7,10 +7,10 @@ import createReport from 'docx-templates';
 import fs from 'fs';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	const { user, session } = await locals.auth.validateUser();
-	if (!(user && session)) {
-		throw redirect(302, '/');
-	}
+	// const { user, session } = await locals.auth.validateUser();
+	// if (!(user && session)) {
+	// 	throw redirect(302, '/');
+	// }
 
 	const survey = await prisma.survey.findUniqueOrThrow({
 		where: {

@@ -59,7 +59,7 @@ export const surveySchema = z.object({
 	markerIndex: z.string().max(200).trim(),
 	markerName: z.string().min(1).max(200).trim(),
 	placingYear: z.number(),
-	signHeight: z.number(),
+	signHeight: z.number().positive(),
 	centerType: z.string().max(200).trim(),
 	altitude: z.number(),
 	trapezes: z.string().max(200).trim(),
@@ -77,10 +77,19 @@ export const surveySchema = z.object({
 	orp1Integrity: z.string().min(1).max(200).trim(),
 	orp2Integrity: z.string().min(1).max(200).trim(),
 	trenchReadability: z.string().min(1).max(200).trim(),
-	upperMarkBelowGroundHeight: z.number(),
+	upperMarkBelowGroundHeight: z.number().positive(),
 	satelliteObservability: z.string().min(1).max(200).trim(),
 	extraNotes: z.string().max(1000).trim(),
 	createdBy: z.string().min(1).max(200).trim(),
-	// exteriorPhoto: z.instanceof(File),
-	// centerMarkPhoto: z.instanceof(File),
+	exteriorPhoto: z.any().optional(),
+	centerMarkPhoto: z.any().optional(),
+});
+
+export const surveySearchSchema = z.object({
+	federalSubject: z.string().min(1).max(200).trim().optional(),
+	placingYear: z.number().optional(),
+	markerIndex: z.string().max(200).trim().optional(),
+	markerName: z.string().min(1).max(200).trim().optional(),
+	workBy: z.string().min(1).max(300).trim().optional(),
+	createdBy: z.string().min(1).max(200).trim().optional(),
 });
