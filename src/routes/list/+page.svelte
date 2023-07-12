@@ -62,7 +62,6 @@
 						options={federalSubjects}
 						label="Субъект Российской Федерации"
 						errors={$errors.federalSubject}
-						maxHeight={32}
 						/>
 						<TextInput 
 						type="number"

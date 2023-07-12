@@ -11,7 +11,6 @@
 	export let modal: ModalSettings | undefined = undefined;
 	export let errors: string[] | undefined = undefined;
 	export let required: boolean | undefined = undefined;
-	export let maxHeight = 48;
 </script>
 
 <label for={name} {...$$restProps}>
@@ -27,7 +26,7 @@
 		<small class="text-error-500">{errors}</small>
 	{/if}
 
-	<div class="card max-h-{maxHeight} w-full overflow-y-auto p-4">
+	<div class="card max-h-48 w-full overflow-y-auto p-4">
 		<Autocomplete
 			bind:input={value}
 			{options}

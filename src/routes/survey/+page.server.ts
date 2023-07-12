@@ -1,12 +1,19 @@
 import type { PageServerLoad, Actions } from './$types';
 import prisma from '$lib/server/prisma';
-import { IntegrityState, ObservabilityState, OpennessState, PresenceState, ReadabilityState, SignType } from '@prisma/client';
+import {
+	IntegrityState,
+	ObservabilityState,
+	OpennessState,
+	PresenceState,
+	ReadabilityState,
+	SignType,
+	Prisma,
+} from '@prisma/client';
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate, setError } from 'sveltekit-superforms/server';
 import { setErrorMap, surveySchema } from '$lib/zod/schema';
 import { writeFileSync } from 'fs';
 import Coordinates from 'coordinate-parser';
-import { Prisma } from '@prisma/client';
 import type { AutocompleteOption } from '@skeletonlabs/skeleton';
 
 export const load: PageServerLoad = async () => {
