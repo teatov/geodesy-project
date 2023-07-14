@@ -39,15 +39,15 @@
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^4.2.0",
-		"zod": "^3.21.4"
+		"zod": "^3.21.4",
+		"csv-parse": "^5.3.8",
+		"docx-templates": "^4.11.1",
+		"dotenv": "^16.0.3"
 	},
 	"type": "module",
 	"dependencies": {
 		"@lucia-auth/adapter-prisma": "^1.0.0",
 		"@prisma/client": "^4.11.0",
-		"csv-parse": "^5.3.8",
-		"docx-templates": "^4.11.1",
-		"dotenv": "^16.0.3",
 		"lucia-auth": "^1.0.0",
 		"ts-node": "^10.9.1"
 	}

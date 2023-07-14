@@ -3,9 +3,11 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import prisma from '$lib/server/prisma';
 import { getStateString, getRecoveryRecommendations, getSignTypeString } from '$lib/infoStorage';
-import createReport from 'docx-templates';
+import pkg from 'docx-templates';
 
 import fs from 'fs';
+
+const { createReport } = pkg;
 
 export const GET: RequestHandler = async ({ params, locals }) => {
 	// const { user, session } = await locals.auth.validateUser();
@@ -37,6 +39,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 			$centerType: survey.centerType,
 			$altitude: survey.altitude,
 			$trapezes: survey.trapezes,
+			$federalSubject: survey.federalSubject.name,
 			$signPresence: getStateString(survey.signPresence),
 			$signPresenceRecom: getRecoveryRecommendations(survey.signPresence),
 			$monolith1Integrity: getStateString(survey.monolith1Integrity),

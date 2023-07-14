@@ -71,7 +71,7 @@
 				<hr class="md:col-span-2" />
 				<Autocomplete
 					name="federalSubject"
-					bind:value={$form.federalSubject}
+					bind:value={federalDistrictInputValue}
 					options={federalSubjects}
 					label="Субъект Российской Федерации"
 					class="md:col-span-2"

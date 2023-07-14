@@ -35,7 +35,7 @@
 	<button class="btn variant-filled-error" type="submit">Удалить</button>
 </form> -->
 
-<div class="container mx-auto mt-0 px-4 py-10 md:max-w-5xl space-y-4">
+<div class="container mx-auto mt-0 space-y-4 px-4 py-10 md:max-w-5xl">
 	<h3 class="my-5 text-center">Карточка обследования пункта</h3>
 	<div>
 		<a href="/{survey.id}/createDocx" class="btn variant-filled-secondary">Скачать .docx</a>
@@ -76,7 +76,7 @@
 			<img class="h-96" src="/surveyPhotos/{survey.exteriorPhoto}" alt="" />
 		</div>
 		<div>
-			<p><b>Фотография марки центра вблизи:</b> </p>
+			<p><b>Фотография марки центра вблизи:</b></p>
 			<img class="h-96" src="/surveyPhotos/{survey.centerMarkPhoto}" alt="" />
 		</div>
 		<hr class="md:col-span-2" />
