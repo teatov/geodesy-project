@@ -56,13 +56,13 @@ export const surveySchema = z.object({
 	workBy: z.string().min(1).max(300).trim(),
 	surveyDate: z.date(),
 	federalSubject: z.string().min(1).max(200).trim(),
-	markerIndex: z.string().max(200).trim(),
+	markerIndex: z.string().min(1).max(200).trim().optional(),
 	markerName: z.string().min(1).max(200).trim(),
-	placingYear: z.number(),
-	signHeight: z.number(),
-	centerType: z.string().max(200).trim(),
-	altitude: z.number(),
-	trapezes: z.string().max(200).trim(),
+	placingYear: z.number().optional(),
+	signHeight: z.number().positive(),
+	centerType: z.string().min(1).max(200).trim().optional(),
+	altitude: z.number().optional(),
+	trapezes: z.string().min(1).max(200).trim().optional(),
 	coordinates: z.string().min(1).max(200).trim(),
 	signMainType: z.string().min(1).max(200).trim(),
 	signMaterial: z.string().max(200).trim(),
@@ -77,30 +77,19 @@ export const surveySchema = z.object({
 	orp1Integrity: z.string().min(1).max(200).trim(),
 	orp2Integrity: z.string().min(1).max(200).trim(),
 	trenchReadability: z.string().min(1).max(200).trim(),
-	upperMarkBelowGroundHeight: z.number(),
+	upperMarkBelowGroundHeight: z.number().positive(),
 	satelliteObservability: z.string().min(1).max(200).trim(),
-	extraNotes: z.string().max(1000).trim(),
+	extraNotes: z.string().min(1).max(1000).trim().optional(),
 	createdBy: z.string().min(1).max(200).trim(),
-	exteriorPhoto: z
-		.any(),
-		// .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-		// .refine(
-		// 	(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-		// 	'Only .jpg, .jpeg, .png and .webp formats are supported.'
-		// ),
-	centerMarkPhoto: z
-		.any(),
-		// .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-		// .refine(
-		// 	(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-		// 	'Only .jpg, .jpeg, .png and .webp formats are supported.'
-		// ),
-	extraPhotos: z
-		.any(),
-		// .refine((files) => files?.length == 1, 'Image is required.')
-		// .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
-		// .refine(
-		// 	(files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-		// 	'.jpg, .jpeg, .png and .webp files are accepted.'
-		// ),
+	exteriorPhoto: z.any().optional(),
+	centerMarkPhoto: z.any().optional(),
+});
+
+export const surveySearchSchema = z.object({
+	federalSubject: z.string().min(1).max(200).trim().optional(),
+	placingYear: z.number().optional(),
+	markerIndex: z.string().max(200).trim().optional(),
+	markerName: z.string().min(1).max(200).trim().optional(),
+	workBy: z.string().min(1).max(300).trim().optional(),
+	createdBy: z.string().min(1).max(200).trim().optional(),
 });

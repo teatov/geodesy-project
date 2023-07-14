@@ -4,6 +4,11 @@
 	export let data: PageData;
 </script>
 
+<svelte:head>
+	<title>Личный кабинет</title>
+	<meta name="description" content="Личный кабинет" />
+</svelte:head>
+
 <h2 class="flex justify-center space-x-4">Личный кабинет</h2>
 
 <div class="flex justify-center space-x-4">
@@ -16,7 +21,6 @@
 		</li>
 	</ul>
 	<br />
-	
 </div>
 
 <div class="flex justify-center space-x-4">

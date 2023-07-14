@@ -10,10 +10,12 @@
 	export let label: string | undefined = undefined;
 	export let modal: ModalSettings | undefined = undefined;
 	export let errors: string[] | undefined = undefined;
+	export let required: boolean | undefined = undefined;
 </script>
 
 <label for={name} {...$$restProps}>
 	{#if label}<span>{label}</span>{/if}
+	{#if required}<span class="text-error-500">*</span>{/if}
 	<div class="mb-2 flex gap-2">
 		<input class="input {errors ? 'input-error' : ''}" type="search" id={name} {name} bind:value />
 		{#if modal}
@@ -31,6 +33,7 @@
 			on:selection={(event) => {
 				value = event.detail.label;
 			}}
+			required={false}
 		/>
 	</div>
 </label>

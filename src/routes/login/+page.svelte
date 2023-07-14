@@ -8,6 +8,11 @@
 	const { form, errors, enhance } = superForm(data.form);
 </script>
 
+<svelte:head>
+	<title>Вход в учётную запись</title>
+	<meta name="description" content="Вход в учётную запись" />
+</svelte:head>
+
 <hgroup>
 	<h2 class="flex justify-center space-x-4">Вход</h2>
 </hgroup>
@@ -32,6 +37,6 @@
 	</form>
 </div>
 
-<div class="flex justify-center space-x-4">
+<!-- <div class="flex justify-center space-x-4">
 	<p>Нет учётной записи? <a href="/signup">Зарегистрироваться</a></p>
-</div>
+</div> -->
