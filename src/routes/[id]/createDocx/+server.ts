@@ -57,9 +57,19 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 			$upperMarkBelowGroundHeight: Math.abs(survey.upperMarkBelowGroundHeight),
 			$satelliteObservability: getStateString(survey.satelliteObservability),
 			$createdBy: survey.createdBy,
-			$createdAt: survey.createdAt.getDate(),
+			$createdAt: [
+				String(survey.createdAt.getDate()).padStart(2, '0'),
+				String(survey.createdAt.getMonth() + 1).padStart(2, '0'),
+				survey.createdAt.getFullYear(),
+			].join('.'),
 			$approvedBy: survey.approvedBy,
-			$approvedAt: survey.approvedAt?.getDate() || '',
+			$approvedAt: survey.approvedAt
+				? [
+						String(survey.approvedAt.getDate()).padStart(2, '0'),
+						String(survey.approvedAt.getMonth() + 1).padStart(2, '0'),
+						survey.approvedAt.getFullYear(),
+				  ].join('.')
+				: '',
 		},
 		additionalJsContext: {
 			centerMarkPhoto: () => {
