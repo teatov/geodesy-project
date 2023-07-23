@@ -4,8 +4,8 @@ app_name="geodesy"
 sudo -u www-data npm run build --MODE=production
 
 # # COPY THE PACKAGE TO THE REMOTE MACHINE
-sudo -u www-data cp -r package.json package-lock.json ./build
-sudo -u www-data cp -r prisma/schema.prisma ./build/prisma
+sudo -u www-data cp -r package.json package-lock.json ./build/
+sudo -u www-data cp -r prisma/schema.prisma ./build/prisma/
 
 cd ./build
 sudo -u www-data npm ci --omit dev
