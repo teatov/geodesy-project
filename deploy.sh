@@ -13,6 +13,6 @@ sudo -u www-data npm ci --omit dev
 sudo -u www-data npx prisma generate
 cd ../
 
-sudo -u www-data pm2 stop /build/index.js --name $app_name 2>/dev/null
-sudo -u www-data pm2 delete /build/index.js --name $app_name
-HOST=127.0.0.1 PORT=3000 sudo -u www-data pm2 start /build/index.js --name $app_name
+sudo -u www-data pm2 stop ./build/index.js --name $app_name
+sudo -u www-data pm2 delete ./build/index.js --name $app_name
+HOST=127.0.0.1 PORT=3000 sudo -u www-data pm2 start ./build/index.js --name $app_name
