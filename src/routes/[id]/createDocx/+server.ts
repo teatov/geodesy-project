@@ -3,11 +3,12 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import prisma from '$lib/server/prisma';
 import { getStateString, getRecoveryRecommendations, getSignTypeString } from '$lib/infoStorage';
-import pkg from 'docx-templates';
+// import pkg from 'docx-templates';
+import createReport from 'docx-templates';
 
 import fs from 'fs';
 
-const { createReport } = pkg;
+// const { createReport } = pkg;
 
 export const GET: RequestHandler = async ({ params, locals }) => {
 	// const { user, session } = await locals.auth.validateUser();
