@@ -1,5 +1,7 @@
 Курсовой проект.
 
+![geoproj](https://github.com/teatov/geodesy-project/assets/79892286/eb760f9b-9fe6-49a1-81dc-f52f2f714e24)
+
 # Установка проекта
 
 Для запуска проекта требуется Node.js.
